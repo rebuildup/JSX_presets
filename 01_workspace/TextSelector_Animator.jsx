@@ -21,30 +21,34 @@ function createTextAnimators(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Check if layer is a text layer
     if (!isTextLayer(textLayer)) {
       throw new Error("Layer is not a text layer");
     }
-    
+
     // Create position animator
     createPositionAnimator(textLayer, controlLayerName);
-    
+
     // Create opacity animator
     createOpacityAnimator(textLayer, controlLayerName);
-    
+
     // Create transform animator
     createTransformAnimator(textLayer, controlLayerName);
-    
+
     // Create wiggle animator
     createWiggleAnimator(textLayer, controlLayerName);
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
@@ -66,40 +70,48 @@ function createPositionAnimator(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Create animator if it doesn't exist
     var animatorName = "TextSelector Position";
     var animator = getOrCreateAnimator(textLayer, animatorName);
-    
+
     // Add properties to animator
     var animatorProps = animator.property("ADBE Text Animator Properties");
-    
+
     // Add Position 3D property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Position 3D")) {
       var positionProp = animatorProps.addProperty("ADBE Text Position 3D");
       positionProp.expression = generatePositionExpression(controlLayerName);
     }
-    
+
     // Add Anchor Point property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Anchor Point 3D")) {
       var anchorProp = animatorProps.addProperty("ADBE Text Anchor Point 3D");
       anchorProp.expression = generateAnchorPointExpression(controlLayerName);
     }
-    
+
     // Add selectors
     addRangeSelector(animator, controlLayerName, "Y");
     addRangeSelector(animator, controlLayerName, "X");
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
-      errorHandler.logError(error, "createPositionAnimator", DEBUG_LEVELS.ERROR);
+      errorHandler.logError(
+        error,
+        "createPositionAnimator",
+        DEBUG_LEVELS.ERROR
+      );
     } else {
       alert("Error in createPositionAnimator: " + error.toString());
     }
@@ -117,34 +129,41 @@ function createOpacityAnimator(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Create animator if it doesn't exist
     var animatorName = "TextSelector Opacity";
     var animator = getOrCreateAnimator(textLayer, animatorName);
-    
+
     // Add properties to animator
     var animatorProps = animator.property("ADBE Text Animator Properties");
-    
+
     // Add Opacity property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Opacity")) {
       var opacityProp = animatorProps.addProperty("ADBE Text Opacity");
       opacityProp.expression = generateOpacityExpression(controlLayerName);
     }
-    
+
     // Add expression selector
     var selectors = animator.property("ADBE Text Selectors");
     if (selectors.numProperties === 0) {
-      var expressionSelector = selectors.addProperty("ADBE Text Expressible Selector");
+      var expressionSelector = selectors.addProperty(
+        "ADBE Text Expressible Selector"
+      );
       expressionSelector.name = "Opacity Selector";
-      expressionSelector.property("ADBE Text Expressible Amount").expression = generateOpacitySelectorExpression(controlLayerName);
+      expressionSelector.property("ADBE Text Expressible Amount").expression =
+        generateOpacitySelectorExpression(controlLayerName);
     }
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
@@ -166,56 +185,68 @@ function createTransformAnimator(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Create animator if it doesn't exist
     var animatorName = "TextSelector Transform";
     var animator = getOrCreateAnimator(textLayer, animatorName);
-    
+
     // Add properties to animator
     var animatorProps = animator.property("ADBE Text Animator Properties");
-    
+
     // Add Scale property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Scale")) {
       var scaleProp = animatorProps.addProperty("ADBE Text Scale");
       scaleProp.expression = generateScaleExpression(controlLayerName);
     }
-    
+
     // Add Rotation property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Rotation")) {
       var rotationProp = animatorProps.addProperty("ADBE Text Rotation");
       rotationProp.expression = generateRotationExpression(controlLayerName);
     }
-    
+
     // Add Skew property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Skew")) {
       var skewProp = animatorProps.addProperty("ADBE Text Skew");
       skewProp.expression = generateDistortionExpression(controlLayerName);
     }
-    
+
     // Add Skew Axis property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Skew Axis")) {
       var skewAxisProp = animatorProps.addProperty("ADBE Text Skew Axis");
-      skewAxisProp.expression = generateDistortionAxisExpression(controlLayerName);
+      skewAxisProp.expression =
+        generateDistortionAxisExpression(controlLayerName);
     }
-    
+
     // Add expression selector
     var selectors = animator.property("ADBE Text Selectors");
     if (selectors.numProperties === 0) {
-      var expressionSelector = selectors.addProperty("ADBE Text Expressible Selector");
+      var expressionSelector = selectors.addProperty(
+        "ADBE Text Expressible Selector"
+      );
       expressionSelector.name = "Transform Selector";
-      expressionSelector.property("ADBE Text Expressible Amount").expression = "textIndex / textTotal";
+      expressionSelector.property("ADBE Text Expressible Amount").expression =
+        "textIndex / textTotal";
     }
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
-      errorHandler.logError(error, "createTransformAnimator", DEBUG_LEVELS.ERROR);
+      errorHandler.logError(
+        error,
+        "createTransformAnimator",
+        DEBUG_LEVELS.ERROR
+      );
     } else {
       alert("Error in createTransformAnimator: " + error.toString());
     }
@@ -233,52 +264,62 @@ function createWiggleAnimator(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Create animator if it doesn't exist
     var animatorName = "TextSelector Wiggle";
     var animator = getOrCreateAnimator(textLayer, animatorName);
-    
+
     // Add properties to animator
     var animatorProps = animator.property("ADBE Text Animator Properties");
-    
+
     // Add Position property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Position 3D")) {
       var positionProp = animatorProps.addProperty("ADBE Text Position 3D");
-      positionProp.expression = generateWigglePositionExpression(controlLayerName);
+      positionProp.expression =
+        generateWigglePositionExpression(controlLayerName);
     }
-    
+
     // Add Scale property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Scale")) {
       var scaleProp = animatorProps.addProperty("ADBE Text Scale");
       scaleProp.expression = generateWiggleScaleExpression(controlLayerName);
     }
-    
+
     // Add Rotation property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Rotation")) {
       var rotationProp = animatorProps.addProperty("ADBE Text Rotation");
-      rotationProp.expression = generateWiggleRotationExpression(controlLayerName);
+      rotationProp.expression =
+        generateWiggleRotationExpression(controlLayerName);
     }
-    
+
     // Add Skew property if it doesn't exist
     if (!propertyExists(animatorProps, "ADBE Text Skew")) {
       var skewProp = animatorProps.addProperty("ADBE Text Skew");
-      skewProp.expression = generateWiggleDistortionExpression(controlLayerName);
+      skewProp.expression =
+        generateWiggleDistortionExpression(controlLayerName);
     }
-    
+
     // Add expression selector
     var selectors = animator.property("ADBE Text Selectors");
     if (selectors.numProperties === 0) {
-      var expressionSelector = selectors.addProperty("ADBE Text Expressible Selector");
+      var expressionSelector = selectors.addProperty(
+        "ADBE Text Expressible Selector"
+      );
       expressionSelector.name = "Wiggle Selector";
-      expressionSelector.property("ADBE Text Expressible Amount").expression = "textIndex / textTotal";
+      expressionSelector.property("ADBE Text Expressible Amount").expression =
+        "textIndex / textTotal";
     }
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
@@ -298,13 +339,15 @@ function createWiggleAnimator(textLayer, controlLayerName) {
  */
 function getOrCreateAnimator(textLayer, animatorName) {
   // Check if animator already exists
-  var textAnimators = textLayer.property("ADBE Text Properties").property("ADBE Text Animators");
+  var textAnimators = textLayer
+    .property("ADBE Text Properties")
+    .property("ADBE Text Animators");
   for (var i = 1; i <= textAnimators.numProperties; i++) {
     if (textAnimators.property(i).name === animatorName) {
       return textAnimators.property(i);
     }
   }
-  
+
   // Create new animator if it doesn't exist
   var animator = textAnimators.addProperty("ADBE Text Animator");
   animator.name = animatorName;
@@ -335,40 +378,42 @@ function propertyExists(propertyGroup, matchName) {
  */
 function addRangeSelector(animator, controlLayerName, axis) {
   var selectors = animator.property("ADBE Text Selectors");
-  
+
   // Create selector
   var selector = selectors.addProperty("ADBE Text Selector");
   selector.name = "Position " + axis + " Selector";
-  
+
   // Configure selector
   var selectorProps = selector.property("ADBE Text Selector Properties");
-  
+
   // Set start and end
   var startProp = selectorProps.property("ADBE Text Percent Start");
   startProp.setValue(0);
-  
+
   var endProp = selectorProps.property("ADBE Text Percent End");
   endProp.setValue(100);
-  
+
   // Set advanced properties
   var advancedProps = selector.property("ADBE Text Selector Advanced");
-  
+
   // Set mode to Add
   var modeProp = advancedProps.property("ADBE Text Range Mode");
   modeProp.setValue(1); // 1 = Add
-  
+
   // Set shape to Ramp Up
   var shapeProp = advancedProps.property("ADBE Text Selector Shape");
   shapeProp.setValue(1); // 1 = Ramp Up
-  
+
   // Set axis-specific expression
   var amountProp = selectorProps.property("ADBE Text Selector Amount");
   if (axis === "X") {
-    amountProp.expression = generatePositionXSelectorExpression(controlLayerName);
+    amountProp.expression =
+      generatePositionXSelectorExpression(controlLayerName);
   } else {
-    amountProp.expression = generatePositionYSelectorExpression(controlLayerName);
+    amountProp.expression =
+      generatePositionYSelectorExpression(controlLayerName);
   }
-  
+
   return selector;
 }
 
@@ -593,20 +638,28 @@ function applyAllAnimatorExpressions(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Apply expressions to all animators
     createTextAnimators(textLayer, controlLayerName);
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
-      errorHandler.logError(error, "applyAllAnimatorExpressions", DEBUG_LEVELS.ERROR);
+      errorHandler.logError(
+        error,
+        "applyAllAnimatorExpressions",
+        DEBUG_LEVELS.ERROR
+      );
     } else {
       alert("Error in applyAllAnimatorExpressions: " + error.toString());
     }
@@ -631,6 +684,6 @@ if (typeof module !== "undefined" && module.exports) {
     generatePositionYSelectorExpression: generatePositionYSelectorExpression,
     generatePositionXSelectorExpression: generatePositionXSelectorExpression,
     generateOpacitySelectorExpression: generateOpacitySelectorExpression,
-    applyAllAnimatorExpressions: applyAllAnimatorExpressions
+    applyAllAnimatorExpressions: applyAllAnimatorExpressions,
   };
 }

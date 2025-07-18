@@ -21,36 +21,36 @@ var ERROR_TYPES = {
   LAYER_NOT_FOUND: "Layer not found",
   EFFECT_NOT_FOUND: "Effect not found",
   PROPERTY_NOT_FOUND: "Property not found",
-  
+
   // Expression errors
   EXPRESSION_ERROR: "Expression error",
   EXPRESSION_SYNTAX_ERROR: "Expression syntax error",
   EXPRESSION_REFERENCE_ERROR: "Expression reference error",
-  
+
   // Script errors
   SCRIPT_ERROR: "Script error",
   INITIALIZATION_ERROR: "Initialization error",
   VALIDATION_ERROR: "Validation error",
   PARAMETER_ERROR: "Parameter error",
-  
+
   // System errors
   SYSTEM_ERROR: "System error",
   MEMORY_ERROR: "Memory error",
   PERMISSION_ERROR: "Permission error",
-  
+
   // After Effects specific errors
   AE_VERSION_ERROR: "After Effects version error",
   COMP_NOT_FOUND: "Composition not found",
   TEXT_LAYER_ERROR: "Text layer error",
-  ANIMATOR_ERROR: "Text animator error"
+  ANIMATOR_ERROR: "Text animator error",
 };
 
 // Error severity levels
 var ERROR_SEVERITY = {
   CRITICAL: 3, // Application may crash or be unusable
-  HIGH: 2,     // Feature completely broken
-  MEDIUM: 1,   // Feature partially broken but usable
-  LOW: 0       // Minor issue, cosmetic or non-essential
+  HIGH: 2, // Feature completely broken
+  MEDIUM: 1, // Feature partially broken but usable
+  LOW: 0, // Minor issue, cosmetic or non-essential
 };
 
 /**
@@ -98,7 +98,7 @@ function createErrorHandler() {
           if (level <= DEBUG_LEVELS.ERROR || severity >= ERROR_SEVERITY.HIGH) {
             alert("TextSelector Error: " + error.toString());
           }
-          
+
           // Add to effect comment for persistent debugging info
           try {
             var comp = app.project.activeItem;
@@ -107,10 +107,12 @@ function createErrorHandler() {
               if (controlLayer) {
                 var debugEffect = controlLayer.effect("Debug Info");
                 if (!debugEffect) {
-                  debugEffect = controlLayer.Effects.addProperty("ADBE Text Control");
+                  debugEffect =
+                    controlLayer.Effects.addProperty("ADBE Text Control");
                   debugEffect.name = "Debug Info";
                 }
-                var currentText = debugEffect.property("ADBE Text Document").value;
+                var currentText =
+                  debugEffect.property("ADBE Text Document").value;
                 var newText = currentText.text + "\n" + message;
                 // Limit log size to prevent performance issues
                 if (newText.length > 5000) {
@@ -133,26 +135,41 @@ function createErrorHandler() {
      * @param {String} message - The message to log
      * @param {String} context - Context where the message originated
      */
-    logInfo: function(message, context) {
-      this.logError(message, context || "Info", DEBUG_LEVELS.INFO, ERROR_SEVERITY.LOW);
+    logInfo: function (message, context) {
+      this.logError(
+        message,
+        context || "Info",
+        DEBUG_LEVELS.INFO,
+        ERROR_SEVERITY.LOW
+      );
     },
-    
+
     /**
      * Log a message at WARNING level
      * @param {String} message - The message to log
      * @param {String} context - Context where the message originated
      */
-    logWarning: function(message, context) {
-      this.logError(message, context || "Warning", DEBUG_LEVELS.WARNING, ERROR_SEVERITY.MEDIUM);
+    logWarning: function (message, context) {
+      this.logError(
+        message,
+        context || "Warning",
+        DEBUG_LEVELS.WARNING,
+        ERROR_SEVERITY.MEDIUM
+      );
     },
-    
+
     /**
      * Log a message at VERBOSE level
      * @param {String} message - The message to log
      * @param {String} context - Context where the message originated
      */
-    logVerbose: function(message, context) {
-      this.logError(message, context || "Verbose", DEBUG_LEVELS.VERBOSE, ERROR_SEVERITY.LOW);
+    logVerbose: function (message, context) {
+      this.logError(
+        message,
+        context || "Verbose",
+        DEBUG_LEVELS.VERBOSE,
+        ERROR_SEVERITY.LOW
+      );
     },
 
     /**
@@ -169,7 +186,7 @@ function createErrorHandler() {
         var startTime = new Date().getTime();
         var result = operation();
         var endTime = new Date().getTime();
-        
+
         // Log execution time for verbose debugging
         if (getDebugMode() && getCurrentDebugLevel() >= DEBUG_LEVELS.VERBOSE) {
           this.logVerbose(
@@ -177,7 +194,7 @@ function createErrorHandler() {
             context || "Performance"
           );
         }
-        
+
         return result;
       } catch (error) {
         this.logError(
@@ -189,7 +206,7 @@ function createErrorHandler() {
         return fallbackValue;
       }
     },
-    
+
     /**
      * Safely execute an operation with retry capability
      * @param {Function} operation - Function to execute
@@ -198,12 +215,17 @@ function createErrorHandler() {
      * @param {Number} maxRetries - Maximum number of retry attempts (default: 3)
      * @returns {*} Result of operation or fallback value
      */
-    safeExecuteWithRetry: function(operation, fallbackValue, context, maxRetries) {
+    safeExecuteWithRetry: function (
+      operation,
+      fallbackValue,
+      context,
+      maxRetries
+    ) {
       var retries = maxRetries || 3;
       var result = fallbackValue;
       var success = false;
       var lastError = null;
-      
+
       for (var i = 0; i < retries && !success; i++) {
         try {
           result = operation();
@@ -214,7 +236,7 @@ function createErrorHandler() {
           $.sleep(100 * Math.pow(2, i));
         }
       }
-      
+
       if (!success && lastError) {
         this.logError(
           lastError,
@@ -230,7 +252,7 @@ function createErrorHandler() {
           ERROR_SEVERITY.HIGH
         );
       }
-      
+
       return result;
     },
 
@@ -302,97 +324,106 @@ function createErrorHandler() {
       }
       return true;
     },
-    
+
     /**
      * Validate After Effects version compatibility
      * @param {String} minVersion - Minimum required version (e.g., "16.0" for CC 2019)
      * @throws {Error} If current version is less than minimum required
      * @returns {Boolean} True if valid
      */
-    validateAEVersion: function(minVersion) {
+    validateAEVersion: function (minVersion) {
       var currentVersion = app.version;
       if (compareVersions(currentVersion, minVersion) < 0) {
         throw new Error(
-          ERROR_TYPES.AE_VERSION_ERROR + 
-          ": Requires After Effects " + minVersion + " or later. Current version: " + currentVersion
+          ERROR_TYPES.AE_VERSION_ERROR +
+            ": Requires After Effects " +
+            minVersion +
+            " or later. Current version: " +
+            currentVersion
         );
       }
       return true;
     },
-    
+
     /**
      * Validate that a composition exists and is active
      * @throws {Error} If no active composition exists
      * @returns {CompItem} The active composition
      */
-    validateActiveComp: function() {
+    validateActiveComp: function () {
       var comp = app.project.activeItem;
       if (!comp || !(comp instanceof CompItem)) {
         throw new Error(ERROR_TYPES.COMP_NOT_FOUND + ": No active composition");
       }
       return comp;
     },
-    
+
     /**
      * Validate that a layer is a text layer
      * @param {Layer} layer - Layer to validate
      * @throws {Error} If layer is not a text layer
      * @returns {Boolean} True if valid
      */
-    validateTextLayer: function(layer) {
+    validateTextLayer: function (layer) {
       this.validateLayer(layer);
-      
+
       try {
         if (!layer.property("ADBE Text Properties")) {
-          throw new Error(ERROR_TYPES.TEXT_LAYER_ERROR + ": Layer is not a text layer");
+          throw new Error(
+            ERROR_TYPES.TEXT_LAYER_ERROR + ": Layer is not a text layer"
+          );
         }
       } catch (e) {
-        throw new Error(ERROR_TYPES.TEXT_LAYER_ERROR + ": Layer is not a text layer");
+        throw new Error(
+          ERROR_TYPES.TEXT_LAYER_ERROR + ": Layer is not a text layer"
+        );
       }
-      
+
       return true;
     },
-    
+
     /**
      * Create a detailed error report for troubleshooting
      * @param {Error|String} error - The error object or message
      * @param {String} context - Context where the error occurred
      * @returns {String} Formatted error report
      */
-    createErrorReport: function(error, context) {
+    createErrorReport: function (error, context) {
       var report = "TextSelector Error Report\n";
       report += "=======================\n\n";
       report += "Timestamp: " + new Date().toISOString() + "\n";
       report += "Context: " + (context || "Unknown") + "\n";
-      report += "Error: " + (error ? error.toString() : "Unknown error") + "\n\n";
-      
+      report +=
+        "Error: " + (error ? error.toString() : "Unknown error") + "\n\n";
+
       // Add stack trace if available
       if (error && error.stack) {
         report += "Stack Trace:\n" + error.stack + "\n\n";
       }
-      
+
       // Add system information
       report += "System Information:\n";
       report += "After Effects Version: " + app.version + "\n";
       report += "Operating System: " + $.os + "\n";
-      
+
       // Add project information
       try {
         report += "\nProject Information:\n";
         report += "Project Name: " + app.project.file.name + "\n";
-        
+
         var comp = app.project.activeItem;
         if (comp && comp instanceof CompItem) {
           report += "Active Composition: " + comp.name + "\n";
-          report += "Composition Resolution: " + comp.width + "x" + comp.height + "\n";
+          report +=
+            "Composition Resolution: " + comp.width + "x" + comp.height + "\n";
           report += "Composition Frame Rate: " + comp.frameRate + "\n";
         }
       } catch (e) {
         report += "Could not retrieve project information\n";
       }
-      
+
       return report;
-    }
+    },
   };
 }
 
@@ -487,19 +518,23 @@ function getSeverityName(severity) {
  * @returns {Number} -1 if version1 < version2, 0 if equal, 1 if version1 > version2
  */
 function compareVersions(version1, version2) {
-  var v1parts = version1.split('.').map(function(item) { return parseInt(item, 10); });
-  var v2parts = version2.split('.').map(function(item) { return parseInt(item, 10); });
-  
+  var v1parts = version1.split(".").map(function (item) {
+    return parseInt(item, 10);
+  });
+  var v2parts = version2.split(".").map(function (item) {
+    return parseInt(item, 10);
+  });
+
   // Ensure both arrays have the same length
   while (v1parts.length < v2parts.length) v1parts.push(0);
   while (v2parts.length < v1parts.length) v2parts.push(0);
-  
+
   // Compare each part
   for (var i = 0; i < v1parts.length; i++) {
     if (v1parts[i] > v2parts[i]) return 1;
     if (v1parts[i] < v2parts[i]) return -1;
   }
-  
+
   return 0; // Versions are equal
 }
 

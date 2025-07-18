@@ -20,57 +20,67 @@ function createTransformController(controlLayer) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate control layer
     errorHandler.validateLayer(controlLayer);
-    
+
     // Create Scale controls
     var scaleGroup = controlLayer.Effects.addProperty("ADBE Group");
     scaleGroup.name = "Scale Controls";
-    
+
     var addScale = scaleGroup.addProperty("ADBE Point Control");
     addScale.name = "Add Scale";
     addScale.property("ADBE Point Control-0").setValue([0, 0]);
-    
+
     var scaleOn = scaleGroup.addProperty("ADBE Checkbox Control");
     scaleOn.name = "Scale : ON";
     scaleOn.property("ADBE Checkbox Control-0").setValue(1);
-    
+
     // Create Rotation controls
     var rotationGroup = controlLayer.Effects.addProperty("ADBE Group");
     rotationGroup.name = "Rotation Controls";
-    
+
     var addRotation = rotationGroup.addProperty("ADBE Slider Control");
     addRotation.name = "Add Rotation";
     addRotation.property("ADBE Slider Control-0").setValue(0);
-    addRotation.property("ADBE Slider Control-0").setPropertyParameters([-360, 360]);
-    
+    addRotation
+      .property("ADBE Slider Control-0")
+      .setPropertyParameters([-360, 360]);
+
     var rotationOn = rotationGroup.addProperty("ADBE Checkbox Control");
     rotationOn.name = "Rotation : ON";
     rotationOn.property("ADBE Checkbox Control-0").setValue(1);
-    
+
     // Create Distortion controls
     var distortionGroup = controlLayer.Effects.addProperty("ADBE Group");
     distortionGroup.name = "Distortion Controls";
-    
+
     var addDistortion = distortionGroup.addProperty("ADBE Slider Control");
     addDistortion.name = "Add Distortion";
     addDistortion.property("ADBE Slider Control-0").setValue(0);
-    addDistortion.property("ADBE Slider Control-0").setPropertyParameters([-100, 100]);
-    
+    addDistortion
+      .property("ADBE Slider Control-0")
+      .setPropertyParameters([-100, 100]);
+
     var addDisAxis = distortionGroup.addProperty("ADBE Slider Control");
     addDisAxis.name = "Add Dis-Axis";
     addDisAxis.property("ADBE Slider Control-0").setValue(0);
-    addDisAxis.property("ADBE Slider Control-0").setPropertyParameters([-100, 100]);
-    
+    addDisAxis
+      .property("ADBE Slider Control-0")
+      .setPropertyParameters([-100, 100]);
+
     var distortionOn = distortionGroup.addProperty("ADBE Checkbox Control");
     distortionOn.name = "Distortion : ON";
     distortionOn.property("ADBE Checkbox Control-0").setValue(1);
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
-      errorHandler.logError(error, "createTransformController", DEBUG_LEVELS.ERROR);
+      errorHandler.logError(
+        error,
+        "createTransformController",
+        DEBUG_LEVELS.ERROR
+      );
     } else {
       alert("Error in createTransformController: " + error.toString());
     }
@@ -88,30 +98,39 @@ function applyTransformExpressions(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Apply scale expression
     var scaleExpression = generateScaleExpression(controlLayerName);
     // Apply to text animator scale property
-    
+
     // Apply rotation expression
     var rotationExpression = generateRotationExpression(controlLayerName);
     // Apply to text animator rotation property
-    
+
     // Apply distortion expression
     var distortionExpression = generateDistortionExpression(controlLayerName);
-    var distortionAxisExpression = generateDistortionAxisExpression(controlLayerName);
+    var distortionAxisExpression =
+      generateDistortionAxisExpression(controlLayerName);
     // Apply to text animator skew and skew axis properties
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
-      errorHandler.logError(error, "applyTransformExpressions", DEBUG_LEVELS.ERROR);
+      errorHandler.logError(
+        error,
+        "applyTransformExpressions",
+        DEBUG_LEVELS.ERROR
+      );
     } else {
       alert("Error in applyTransformExpressions: " + error.toString());
     }
@@ -348,91 +367,109 @@ function createTransformAnimator(textLayer, controlLayerName) {
   try {
     // Create error handler
     var errorHandler = createErrorHandler();
-    
+
     // Validate parameters
     errorHandler.validateLayer(textLayer);
-    errorHandler.validateParameter(controlLayerName, "controlLayerName", function(val) {
-      return val && typeof val === "string";
-    });
-    
+    errorHandler.validateParameter(
+      controlLayerName,
+      "controlLayerName",
+      function (val) {
+        return val && typeof val === "string";
+      }
+    );
+
     // Check if layer is a text layer
     if (!isTextLayer(textLayer)) {
       throw new Error("Layer is not a text layer");
     }
-    
+
     // Get text property
-    var textProp = textLayer.property("ADBE Text Properties").property("ADBE Text Document");
-    
+    var textProp = textLayer
+      .property("ADBE Text Properties")
+      .property("ADBE Text Document");
+
     // Create animator if it doesn't exist
     var animatorName = "TextSelector Transform";
     var animator = null;
-    
+
     // Check if animator already exists
-    var textAnimators = textLayer.property("ADBE Text Properties").property("ADBE Text Animators");
+    var textAnimators = textLayer
+      .property("ADBE Text Properties")
+      .property("ADBE Text Animators");
     for (var i = 1; i <= textAnimators.numProperties; i++) {
       if (textAnimators.property(i).name === animatorName) {
         animator = textAnimators.property(i);
         break;
       }
     }
-    
+
     // Create new animator if it doesn't exist
     if (!animator) {
       animator = textAnimators.addProperty("ADBE Text Animator");
       animator.name = animatorName;
     }
-    
+
     // Add properties to animator
     var animatorProps = animator.property("ADBE Text Animator Properties");
-    
+
     // Add Scale property if it doesn't exist
     if (!animatorProps.property("ADBE Text Scale")) {
       var scaleProp = animatorProps.addProperty("ADBE Text Scale");
       scaleProp.expression = generateScaleExpression(controlLayerName);
     }
-    
+
     // Add Rotation property if it doesn't exist
     if (!animatorProps.property("ADBE Text Rotation")) {
       var rotationProp = animatorProps.addProperty("ADBE Text Rotation");
       rotationProp.expression = generateRotationExpression(controlLayerName);
     }
-    
+
     // Add Skew property if it doesn't exist
     if (!animatorProps.property("ADBE Text Skew")) {
       var skewProp = animatorProps.addProperty("ADBE Text Skew");
       skewProp.expression = generateDistortionExpression(controlLayerName);
     }
-    
+
     // Add Skew Axis property if it doesn't exist
     if (!animatorProps.property("ADBE Text Skew Axis")) {
       var skewAxisProp = animatorProps.addProperty("ADBE Text Skew Axis");
-      skewAxisProp.expression = generateDistortionAxisExpression(controlLayerName);
+      skewAxisProp.expression =
+        generateDistortionAxisExpression(controlLayerName);
     }
-    
+
     // Add selector if it doesn't exist
     var selectors = animator.property("ADBE Text Selectors");
     if (selectors.numProperties === 0) {
       var selector = selectors.addProperty("ADBE Text Selector");
       selector.name = "Selector";
-      
+
       // Configure selector
       var selectorProps = selector.property("ADBE Text Selector Properties");
-      var expressionSelector = selectorProps.property("ADBE Text Percent Start");
+      var expressionSelector = selectorProps.property(
+        "ADBE Text Percent Start"
+      );
       expressionSelector.expression = "0";
-      
+
       var endSelector = selectorProps.property("ADBE Text Percent End");
       endSelector.expression = "100";
-      
+
       // Add expression selector
-      var expressionSelector = selectors.addProperty("ADBE Text Expressible Selector");
+      var expressionSelector = selectors.addProperty(
+        "ADBE Text Expressible Selector"
+      );
       expressionSelector.name = "Expression Selector";
-      expressionSelector.property("ADBE Text Expressible Amount").expression = "textIndex / textTotal";
+      expressionSelector.property("ADBE Text Expressible Amount").expression =
+        "textIndex / textTotal";
     }
-    
+
     return true;
   } catch (error) {
     if (errorHandler) {
-      errorHandler.logError(error, "createTransformAnimator", DEBUG_LEVELS.ERROR);
+      errorHandler.logError(
+        error,
+        "createTransformAnimator",
+        DEBUG_LEVELS.ERROR
+      );
     } else {
       alert("Error in createTransformAnimator: " + error.toString());
     }
@@ -449,6 +486,6 @@ if (typeof module !== "undefined" && module.exports) {
     generateRotationExpression: generateRotationExpression,
     generateDistortionExpression: generateDistortionExpression,
     generateDistortionAxisExpression: generateDistortionAxisExpression,
-    createTransformAnimator: createTransformAnimator
+    createTransformAnimator: createTransformAnimator,
   };
 }

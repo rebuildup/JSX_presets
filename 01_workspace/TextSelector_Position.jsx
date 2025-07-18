@@ -7,7 +7,7 @@
  * TextSelector_Position.jsx
  * Position controller module for the Text Selector Modular System
  * Version: 2.0.1
- * 
+ *
  * このモジュールはテキストの位置とアンカーポイントを制御します。
  * シングルモードと2-wayモード（XYとYX）をサポートし、
  * 一貫した乱数生成のためのseedRandomを使用します。
@@ -24,13 +24,13 @@ function createPositionController(controlLayer) {
 
   try {
     var errorHandler = createErrorHandler();
-    
+
     // Validate input parameter
     errorHandler.validateLayer(controlLayer);
-    
+
     // Create effect group for organization
     var positionGroup = createEffectGroup(controlLayer, EFFECT_NAMES.POSITION);
-    
+
     // Ani - Position (XY point control for manual positioning)
     var aniPosition = createPointControl(
       controlLayer,
@@ -77,7 +77,9 @@ function applyPositionExpressions(textLayer, controlLayerName) {
     function () {
       // Validate text layer
       if (!isTextLayer(textLayer)) {
-        throw new Error(ERROR_TYPES.VALIDATION_ERROR + ": Selected layer is not a text layer");
+        throw new Error(
+          ERROR_TYPES.VALIDATION_ERROR + ": Selected layer is not a text layer"
+        );
       }
 
       // Find existing position animator or create new one
@@ -117,7 +119,7 @@ function applyPositionExpressions(textLayer, controlLayerName) {
       // Add range selector to the position animator
       var selectors = positionAnimator.property("ADBE Text Selectors");
       var rangeSelector = null;
-      
+
       // Check if range selector already exists
       for (var i = 1; i <= selectors.numProperties; i++) {
         if (selectors.property(i).matchName === "ADBE Text Selector") {
@@ -125,21 +127,23 @@ function applyPositionExpressions(textLayer, controlLayerName) {
           break;
         }
       }
-      
+
       if (!rangeSelector) {
         rangeSelector = selectors.addProperty("ADBE Text Selector");
         rangeSelector.name = "TextSelector Range";
-        
+
         // Configure range selector properties for optimal animation
-        var selectorProps = rangeSelector.property("ADBE Text Selector Properties");
-        
+        var selectorProps = rangeSelector.property(
+          "ADBE Text Selector Properties"
+        );
+
         // Set Start to 0% and End to 100% for full text coverage
         selectorProps.property("ADBE Text Range Start").setValue(0);
         selectorProps.property("ADBE Text Range End").setValue(100);
-        
+
         // Set Offset to 0 as we'll control timing through expressions
         selectorProps.property("ADBE Text Range Offset").setValue(0);
-        
+
         // Set Advanced properties for better control
         var advanced = selectorProps.property("ADBE Text Range Advanced");
         advanced.property("ADBE Text Range Shape").setValue(1); // Square shape for crisp transitions
@@ -153,7 +157,8 @@ function applyPositionExpressions(textLayer, controlLayerName) {
       var anchorPointProp = textLayer
         .property("ADBE Transform Group")
         .property("ADBE Anchor Point");
-      anchorPointProp.expression = generateAnchorPointExpression(controlLayerName);
+      anchorPointProp.expression =
+        generateAnchorPointExpression(controlLayerName);
 
       return true;
     },
@@ -258,7 +263,10 @@ function initializePositionController(comp) {
       // Find or create control layer
       var controlLayer = findOrCreateControlLayer(comp);
       if (!controlLayer) {
-        throw new Error(ERROR_TYPES.INITIALIZATION_ERROR + ": Failed to find or create control layer");
+        throw new Error(
+          ERROR_TYPES.INITIALIZATION_ERROR +
+            ": Failed to find or create control layer"
+        );
       }
 
       // Create position controller
@@ -282,13 +290,19 @@ function applyPositionToSelectedLayers(comp) {
       // Find control layer
       var controlLayer = findLayerByName(comp, "TextSelector_Controls");
       if (!controlLayer) {
-        throw new Error(ERROR_TYPES.LAYER_NOT_FOUND + ": TextSelector_Controls layer not found. Please initialize the system first.");
+        throw new Error(
+          ERROR_TYPES.LAYER_NOT_FOUND +
+            ": TextSelector_Controls layer not found. Please initialize the system first."
+        );
       }
 
       // Get selected layers
       var selectedLayers = getSelectedLayers();
       if (selectedLayers.length === 0) {
-        throw new Error(ERROR_TYPES.VALIDATION_ERROR + ": Please select at least one text layer");
+        throw new Error(
+          ERROR_TYPES.VALIDATION_ERROR +
+            ": Please select at least one text layer"
+        );
       }
 
       // Filter for text layers only
@@ -298,9 +312,11 @@ function applyPositionToSelectedLayers(comp) {
           textLayers.push(selectedLayers[i]);
         }
       }
-      
+
       if (textLayers.length === 0) {
-        throw new Error(ERROR_TYPES.VALIDATION_ERROR + ": No text layers selected");
+        throw new Error(
+          ERROR_TYPES.VALIDATION_ERROR + ": No text layers selected"
+        );
       }
 
       // Apply expressions to selected layers
@@ -317,9 +333,7 @@ function applyPositionToSelectedLayers(comp) {
 
       if (success) {
         alert(
-          "Position control applied to " +
-            textLayers.length +
-            " text layer(s)"
+          "Position control applied to " + textLayers.length + " text layer(s)"
         );
       } else {
         alert("Some errors occurred while applying position control");
@@ -338,30 +352,34 @@ function applyPositionToSelectedLayers(comp) {
  */
 function testPositionController() {
   var errorHandler = createErrorHandler();
-  
+
   return errorHandler.safeExecute(
-    function() {
+    function () {
       var comp = getActiveComp();
       if (!comp) {
         throw new Error("No active composition");
       }
-      
+
       // Test 1: Create position controller
       var controlLayer = findOrCreateControlLayer(comp);
       var positionControls = createPositionController(controlLayer);
-      
-      if (!positionControls || !positionControls.position || !positionControls.anchor) {
+
+      if (
+        !positionControls ||
+        !positionControls.position ||
+        !positionControls.anchor
+      ) {
         throw new Error("Failed to create position controls");
       }
-      
+
       // Test 2: Generate expressions
       var posExpr = generatePositionExpression(controlLayer.name);
       var anchorExpr = generateAnchorPointExpression(controlLayer.name);
-      
+
       if (!posExpr || !anchorExpr) {
         throw new Error("Failed to generate expressions");
       }
-      
+
       alert("Position controller tests passed");
       return true;
     },
@@ -379,6 +397,6 @@ if (typeof module !== "undefined" && module.exports) {
     generateAnchorPointExpression: generateAnchorPointExpression,
     initializePositionController: initializePositionController,
     applyPositionToSelectedLayers: applyPositionToSelectedLayers,
-    testPositionController: testPositionController
+    testPositionController: testPositionController,
   };
 }

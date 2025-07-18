@@ -18,10 +18,14 @@
  * @param {Boolean} includeDebugInfo - Whether to include debug information in the expression
  * @returns {String} The safe expression with error handling
  */
-function generateSafeExpression(expressionCode, fallbackValue, includeDebugInfo) {
+function generateSafeExpression(
+  expressionCode,
+  fallbackValue,
+  includeDebugInfo
+) {
   // Convert fallback value to string representation
   var fallbackStr = "";
-  
+
   if (fallbackValue === undefined || fallbackValue === null) {
     fallbackStr = "value";
   } else if (typeof fallbackValue === "string") {
@@ -31,7 +35,7 @@ function generateSafeExpression(expressionCode, fallbackValue, includeDebugInfo)
   } else {
     fallbackStr = fallbackValue.toString();
   }
-  
+
   // Create debug info section if requested
   var debugSection = "";
   if (includeDebugInfo) {
@@ -44,7 +48,7 @@ function generateSafeExpression(expressionCode, fallbackValue, includeDebugInfo)
       }
     } catch(e) {}`;
   }
-  
+
   // Build the safe expression
   return `
 try {
@@ -62,13 +66,17 @@ try {
  * @param {Object} additionalParams - Additional parameters to substitute in the template
  * @returns {String} The generated expression
  */
-function createExpressionFromTemplate(templateName, controlLayerName, additionalParams) {
+function createExpressionFromTemplate(
+  templateName,
+  controlLayerName,
+  additionalParams
+) {
   // Get the template
   var template = getExpressionTemplate(templateName);
-  
+
   // Replace control layer name
   template = template.replace(/\$\{CONTROL_LAYER\}/g, controlLayerName);
-  
+
   // Replace additional parameters
   if (additionalParams) {
     for (var key in additionalParams) {
@@ -78,7 +86,7 @@ function createExpressionFromTemplate(templateName, controlLayerName, additional
       }
     }
   }
-  
+
   return template;
 }
 
@@ -577,13 +585,13 @@ if (!globalEnable || !wiggleEnabled) {
 function optimizeExpression(expression) {
   // Apply variable caching optimization
   expression = applyCachingOptimization(expression);
-  
+
   // Apply early exit optimization
   expression = applyEarlyExitOptimization(expression);
-  
+
   // Apply valueAtTime optimization
   expression = applyValueAtTimeOptimization(expression);
-  
+
   return expression;
 }
 
@@ -595,30 +603,31 @@ function optimizeExpression(expression) {
 function applyCachingOptimization(expression) {
   // This is a simplified implementation
   // In a real implementation, this would analyze the expression and cache repeated lookups
-  
+
   // Check if the expression already has caching
   if (expression.indexOf("var ctrlLayer = thisComp.layer") !== -1) {
     return expression; // Already optimized
   }
-  
+
   // Add control layer caching if not present
   if (expression.indexOf("thisComp.layer(") !== -1) {
     var layerMatch = expression.match(/thisComp\.layer\(["']([^"']+)["']\)/);
     if (layerMatch && layerMatch[1]) {
       var layerName = layerMatch[1];
-      var cachingCode = "var ctrlLayer = thisComp.layer(\"" + layerName + "\");\n";
-      
+      var cachingCode =
+        'var ctrlLayer = thisComp.layer("' + layerName + '");\n';
+
       // Replace direct layer references with cached variable
       expression = expression.replace(
         new RegExp("thisComp\\.layer\\([\"']" + layerName + "[\"']\\)", "g"),
         "ctrlLayer"
       );
-      
+
       // Add caching code at the beginning of the expression
       expression = cachingCode + expression;
     }
   }
-  
+
   return expression;
 }
 
@@ -630,12 +639,12 @@ function applyCachingOptimization(expression) {
 function applyEarlyExitOptimization(expression) {
   // This is a simplified implementation
   // In a real implementation, this would analyze the expression and add early exits
-  
+
   // Check if the expression already has early exit
   if (expression.indexOf("if (!globalEnable)") !== -1) {
     return expression; // Already optimized
   }
-  
+
   // Add global enable check if not present
   if (expression.indexOf("globalEnable") !== -1) {
     var earlyExitCode = `
@@ -644,21 +653,21 @@ if (!globalEnable) {
   ${getDefaultValueForExpression(expression)};
 } else {
 `;
-    
+
     // Find a good insertion point
     var insertPoint = expression.indexOf("var globalEnable");
     if (insertPoint !== -1) {
       insertPoint = expression.indexOf("\n", insertPoint) + 1;
-      
+
       // Insert early exit code
-      expression = 
-        expression.substring(0, insertPoint) + 
-        earlyExitCode + 
-        expression.substring(insertPoint) + 
+      expression =
+        expression.substring(0, insertPoint) +
+        earlyExitCode +
+        expression.substring(insertPoint) +
         "\n}";
     }
   }
-  
+
   return expression;
 }
 
@@ -670,31 +679,33 @@ if (!globalEnable) {
 function applyValueAtTimeOptimization(expression) {
   // This is a simplified implementation
   // In a real implementation, this would analyze the expression and optimize valueAtTime calls
-  
+
   // Check for valueAtTime calls
   if (expression.indexOf("valueAtTime") !== -1) {
     // Cache time calculations
-    if (expression.indexOf("var d = ") === -1 && 
-        expression.indexOf("delay * thisComp.frameDuration * (textIndex - 1)") !== -1) {
-      
+    if (
+      expression.indexOf("var d = ") === -1 &&
+      expression.indexOf("delay * thisComp.frameDuration * (textIndex - 1)") !==
+        -1
+    ) {
       expression = expression.replace(
         /delay \* thisComp\.frameDuration \* \(textIndex - 1\)/g,
         "d"
       );
-      
+
       // Add time calculation caching
       var insertPoint = expression.indexOf("var delay");
       if (insertPoint !== -1) {
         insertPoint = expression.indexOf("\n", insertPoint) + 1;
-        
-        expression = 
-          expression.substring(0, insertPoint) + 
-          "var d = delay * thisComp.frameDuration * (textIndex - 1);\n" + 
+
+        expression =
+          expression.substring(0, insertPoint) +
+          "var d = delay * thisComp.frameDuration * (textIndex - 1);\n" +
           expression.substring(insertPoint);
       }
     }
   }
-  
+
   return expression;
 }
 
@@ -710,7 +721,10 @@ function getDefaultValueForExpression(expression) {
     return "[0, 0]";
   } else if (expression.indexOf("[0, 0, 0]") !== -1) {
     return "[0, 0, 0]";
-  } else if (expression.indexOf("opacity") !== -1 || expression.indexOf("Opacity") !== -1) {
+  } else if (
+    expression.indexOf("opacity") !== -1 ||
+    expression.indexOf("Opacity") !== -1
+  ) {
     return "100";
   } else {
     return "0";
@@ -724,13 +738,21 @@ function getDefaultValueForExpression(expression) {
  * @param {Object} additionalParams - Additional parameters for the expression
  * @returns {String} The optimized expression
  */
-function createOptimizedExpression(propertyType, controlLayerName, additionalParams) {
+function createOptimizedExpression(
+  propertyType,
+  controlLayerName,
+  additionalParams
+) {
   // Get the expression template
-  var template = createExpressionFromTemplate(propertyType, controlLayerName, additionalParams);
-  
+  var template = createExpressionFromTemplate(
+    propertyType,
+    controlLayerName,
+    additionalParams
+  );
+
   // Optimize the expression
   var optimized = optimizeExpression(template);
-  
+
   // Wrap in safe expression
   var fallbackValue = getDefaultValueForPropertyType(propertyType);
   return generateSafeExpression(optimized, fallbackValue, true);
@@ -774,6 +796,6 @@ if (typeof module !== "undefined" && module.exports) {
     applyEarlyExitOptimization: applyEarlyExitOptimization,
     applyValueAtTimeOptimization: applyValueAtTimeOptimization,
     createOptimizedExpression: createOptimizedExpression,
-    getDefaultValueForPropertyType: getDefaultValueForPropertyType
+    getDefaultValueForPropertyType: getDefaultValueForPropertyType,
   };
 }
