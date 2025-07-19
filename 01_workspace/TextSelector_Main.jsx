@@ -529,7 +529,6 @@ function applyToSelectedLayers() {
     return result;
   }
 }
-
 /**
  * Creates a distribution package with organized folder structure
  * @param {String} outputPath - Path to create the distribution package

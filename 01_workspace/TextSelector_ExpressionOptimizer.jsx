@@ -49,8 +49,8 @@ function generateSafeExpression(
       "    } catch(e) {}";
   }
 
-  // Build the safe expression
-  return 
+  // Build the safe expression - FIXED: Keep return statement on one line
+  return (
     "\ntry {\n" +
     "    " +
     expressionCode +
@@ -62,7 +62,8 @@ function generateSafeExpression(
     "    " +
     fallbackStr +
     ";\n" +
-    "}";
+    "}"
+  );
 }
 
 /**
@@ -166,8 +167,8 @@ function getPositionYTemplate() {
  * @returns {String} The template expression
  */
 function getPositionXTemplate() {
-  return 
-    "// Position X Selector expression for TextSelector\n" +
+  return;
+  "// Position X Selector expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -197,8 +198,8 @@ function getPositionXTemplate() {
  * @returns {String} The template expression
  */
 function getTwoWayRandomizerTemplate() {
-  return 
-    "// 2-way Randomizer expression for TextSelector\n" +
+  return;
+  "// 2-way Randomizer expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -226,8 +227,8 @@ function getTwoWayRandomizerTemplate() {
  * @returns {String} The template expression
  */
 function getOpacityTemplate() {
-  return 
-    "// Opacity expression for TextSelector\n" +
+  return;
+  "// Opacity expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -264,8 +265,8 @@ function getOpacityTemplate() {
  * @returns {String} The template expression
  */
 function getScaleTemplate() {
-  return 
-    "// Scale expression for TextSelector\n" +
+  return;
+  "// Scale expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -321,8 +322,8 @@ function getScaleTemplate() {
  * @returns {String} The template expression
  */
 function getRotationTemplate() {
-  return 
-    "// Rotation expression for TextSelector\n" +
+  return;
+  "// Rotation expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -371,8 +372,8 @@ function getRotationTemplate() {
  * @returns {String} The template expression
  */
 function getDistortionTemplate() {
-  return 
-    "// Distortion expression for TextSelector\n" +
+  return;
+  "// Distortion expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -421,7 +422,7 @@ function getDistortionTemplate() {
  * @returns {String} The template expression
  */
 function getWigglePositionTemplate() {
-  return 
+  return (
     "// Wiggle Position expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
@@ -452,25 +453,29 @@ function getWigglePositionTemplate() {
     "  var currentTime = time + timeOffset;\n" +
     "  \n" +
     "  // Character-specific seed\n" +
-    "  var characterSeed = seed + idx;\n";
-  
+    "  var characterSeed = seed + idx;\n"
+  );
+
   // Apply smooth wiggle or standard wiggle based on setting
   if (smooth) {
     // Smooth wiggle using sine waves for natural motion
     seedRandom(characterSeed);
     var randomPhase = random(0, Math.PI * 2);
-    var x = Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];
-    var y = Math.sin(currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI/2) * amp[1];
+    var x =
+      Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];
+    var y =
+      Math.sin(
+        currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI / 2
+      ) * amp[1];
     [x, y];
   } else {
     // Standard wiggle with character-specific timing and seed
     seedRandom(characterSeed);
     [
       wiggle(freq[0], amp[0], 1, 0.5, currentTime)[0],
-      wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]
+      wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1],
     ];
   }
-}";
 }
 
 /**
@@ -478,8 +483,8 @@ function getWigglePositionTemplate() {
  * @returns {String} The template expression
  */
 function getWiggleScaleTemplate() {
-  return 
-    "// Wiggle Scale expression for TextSelector\n" +
+  return;
+  "// Wiggle Scale expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -538,8 +543,8 @@ function getWiggleScaleTemplate() {
  * @returns {String} The template expression
  */
 function getWiggleRotationTemplate() {
-  return 
-    "// Wiggle Rotation expression for TextSelector\n" +
+  return;
+  "// Wiggle Rotation expression for TextSelector\n" +
     "// Cache control layer reference\n" +
     'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
     'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
@@ -655,10 +660,12 @@ function applyEarlyExitOptimization(expression) {
 
   // Add global enable check if not present
   if (expression.indexOf("globalEnable") !== -1) {
-    var earlyExitCode = 
+    var earlyExitCode =
       "\n// Early exit if disabled\n" +
       "if (!globalEnable) {\n" +
-      "  " + getDefaultValueForExpression(expression) + ";\n" +
+      "  " +
+      getDefaultValueForExpression(expression) +
+      ";\n" +
       "} else {\n";
 
     // Find a good insertion point
