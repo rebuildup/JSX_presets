@@ -155,54 +155,54 @@ function applyWiggleExpressions(textLayer, controlLayerName) {
  * @returns {String} Wiggle position expression
  */
 function generateWigglePositionExpression(controlLayerName) {
-  var expressionCode = `
-// Wiggle Position expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable || !wiggleEnabled) {
-  [0, 0];
-} else {
-  // Cache effect references
-  var freq = ctrlLayer.effect("Fluc/Sec")("Point");
-  var amp = ctrlLayer.effect("Wiggle Position")("Point");
-  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");
-  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Get text index for character-specific timing
-  var idx = textIndex;
-  
-  // Calculate character-specific time offset
-  var timeOffset = idx * thisComp.frameDuration * 0.1;
-  
-  // Current time with offset
-  var currentTime = time + timeOffset;
-  
-  // Character-specific seed
-  var characterSeed = seed + idx;
-  
-  // Apply smooth wiggle or standard wiggle based on setting
-  if (smooth) {
-    // Smooth wiggle using sine waves for natural motion
-    seedRandom(characterSeed);
-    var randomPhase = random(0, Math.PI * 2);
-    var x = Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];
-    var y = Math.sin(currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI/2) * amp[1];
-    [x, y];
-  } else {
-    // Standard wiggle with character-specific timing and seed
-    seedRandom(characterSeed);
-    wiggle(freq[0], amp[0], 1, 0.5, currentTime)[0],
-    wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]
-  }
-}`;
+  var expressionCode =
+    "// Wiggle Position expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "var wiggleEnabled = ctrlLayer.effect(\"Wiggle Add\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable || !wiggleEnabled) {\n" +
+    "  [0, 0];\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var freq = ctrlLayer.effect(\"Fluc/Sec\")(\"Point\");\n" +
+    "  var amp = ctrlLayer.effect(\"Wiggle Position\")(\"Point\");\n" +
+    "  var seed = ctrlLayer.effect(\"Wiggle Seed\")(\"Slider\");\n" +
+    "  var smooth = ctrlLayer.effect(\"Smooth Wiggle\")(\"Checkbox\");\n" +
+    "  var posti = ctrlLayer.effect(\"Posterize(0=FPS)\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Get text index for character-specific timing\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Calculate character-specific time offset\n" +
+    "  var timeOffset = idx * thisComp.frameDuration * 0.1;\n" +
+    "  \n" +
+    "  // Current time with offset\n" +
+    "  var currentTime = time + timeOffset;\n" +
+    "  \n" +
+    "  // Character-specific seed\n" +
+    "  var characterSeed = seed + idx;\n" +
+    "  \n" +
+    "  // Apply smooth wiggle or standard wiggle based on setting\n" +
+    "  if (smooth) {\n" +
+    "    // Smooth wiggle using sine waves for natural motion\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    var randomPhase = random(0, Math.PI * 2);\n" +
+    "    var x = Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];\n" +
+    "    var y = Math.sin(currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI/2) * amp[1];\n" +
+    "    [x, y];\n" +
+    "  } else {\n" +
+    "    // Standard wiggle with character-specific timing and seed\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    wiggle(freq[0], amp[0], 1, 0.5, currentTime)[0],\n" +
+    "    wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]\n" +
+    "  }\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "[0, 0]");
 }
@@ -213,59 +213,59 @@ if (!globalEnable || !wiggleEnabled) {
  * @returns {String} Wiggle scale expression
  */
 function generateWiggleScaleExpression(controlLayerName) {
-  var expressionCode = `
-// Wiggle Scale expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable || !wiggleEnabled) {
-  [100, 100];
-} else {
-  // Cache effect references
-  var freq = ctrlLayer.effect("Fluc/Sec")("Point");
-  var amp = ctrlLayer.effect("Wiggle Scale")("Point");
-  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");
-  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Get text index for character-specific timing
-  var idx = textIndex;
-  
-  // Calculate character-specific time offset
-  var timeOffset = idx * thisComp.frameDuration * 0.1;
-  
-  // Current time with offset
-  var currentTime = time + timeOffset;
-  
-  // Character-specific seed
-  var characterSeed = seed + idx;
-  
-  // Base scale value (100%)
-  var baseScale = [100, 100];
-  
-  // Apply smooth wiggle or standard wiggle based on setting
-  if (smooth) {
-    // Smooth wiggle using sine waves for natural motion
-    seedRandom(characterSeed);
-    var randomPhase = random(0, Math.PI * 2);
-    var x = Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];
-    var y = Math.sin(currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI/2) * amp[1];
-    [baseScale[0] + x, baseScale[1] + y];
-  } else {
-    // Standard wiggle with character-specific timing and seed
-    seedRandom(characterSeed);
-    [
-      baseScale[0] + wiggle(freq[0], amp[0], 1, 0.5, currentTime)[0],
-      baseScale[1] + wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]
-    ];
-  }
-}`;
+  var expressionCode =
+    "// Wiggle Scale expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "var wiggleEnabled = ctrlLayer.effect(\"Wiggle Add\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable || !wiggleEnabled) {\n" +
+    "  [100, 100];\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var freq = ctrlLayer.effect(\"Fluc/Sec\")(\"Point\");\n" +
+    "  var amp = ctrlLayer.effect(\"Wiggle Scale\")(\"Point\");\n" +
+    "  var seed = ctrlLayer.effect(\"Wiggle Seed\")(\"Slider\");\n" +
+    "  var smooth = ctrlLayer.effect(\"Smooth Wiggle\")(\"Checkbox\");\n" +
+    "  var posti = ctrlLayer.effect(\"Posterize(0=FPS)\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Get text index for character-specific timing\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Calculate character-specific time offset\n" +
+    "  var timeOffset = idx * thisComp.frameDuration * 0.1;\n" +
+    "  \n" +
+    "  // Current time with offset\n" +
+    "  var currentTime = time + timeOffset;\n" +
+    "  \n" +
+    "  // Character-specific seed\n" +
+    "  var characterSeed = seed + idx;\n" +
+    "  \n" +
+    "  // Base scale value (100%)\n" +
+    "  var baseScale = [100, 100];\n" +
+    "  \n" +
+    "  // Apply smooth wiggle or standard wiggle based on setting\n" +
+    "  if (smooth) {\n" +
+    "    // Smooth wiggle using sine waves for natural motion\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    var randomPhase = random(0, Math.PI * 2);\n" +
+    "    var x = Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];\n" +
+    "    var y = Math.sin(currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI/2) * amp[1];\n" +
+    "    [baseScale[0] + x, baseScale[1] + y];\n" +
+    "  } else {\n" +
+    "    // Standard wiggle with character-specific timing and seed\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    [\n" +
+    "      baseScale[0] + wiggle(freq[0], amp[0], 1, 0.5, currentTime)[0],\n" +
+    "      baseScale[1] + wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]\n" +
+    "    ];\n" +
+    "  }\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "[100, 100]");
 }
@@ -276,51 +276,51 @@ if (!globalEnable || !wiggleEnabled) {
  * @returns {String} Wiggle rotation expression
  */
 function generateWiggleRotationExpression(controlLayerName) {
-  var expressionCode = `
-// Wiggle Rotation expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable || !wiggleEnabled) {
-  0;
-} else {
-  // Cache effect references
-  var freq = ctrlLayer.effect("Fluc/Sec")("Point")[0]; // Use X frequency for rotation
-  var amp = ctrlLayer.effect("Wiggle Rotation")("Slider");
-  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");
-  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Get text index for character-specific timing
-  var idx = textIndex;
-  
-  // Calculate character-specific time offset
-  var timeOffset = idx * thisComp.frameDuration * 0.1;
-  
-  // Current time with offset
-  var currentTime = time + timeOffset;
-  
-  // Character-specific seed
-  var characterSeed = seed + idx;
-  
-  // Apply smooth wiggle or standard wiggle based on setting
-  if (smooth) {
-    // Smooth wiggle using sine waves for natural motion
-    seedRandom(characterSeed);
-    var randomPhase = random(0, Math.PI * 2);
-    Math.sin(currentTime * freq * Math.PI * 2 + randomPhase) * amp;
-  } else {
-    // Standard wiggle with character-specific timing and seed
-    seedRandom(characterSeed);
-    wiggle(freq, amp, 1, 0.5, currentTime);
-  }
-}`;
+  var expressionCode =
+    "// Wiggle Rotation expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "var wiggleEnabled = ctrlLayer.effect(\"Wiggle Add\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable || !wiggleEnabled) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var freq = ctrlLayer.effect(\"Fluc/Sec\")(\"Point\")[0]; // Use X frequency for rotation\n" +
+    "  var amp = ctrlLayer.effect(\"Wiggle Rotation\")(\"Slider\");\n" +
+    "  var seed = ctrlLayer.effect(\"Wiggle Seed\")(\"Slider\");\n" +
+    "  var smooth = ctrlLayer.effect(\"Smooth Wiggle\")(\"Checkbox\");\n" +
+    "  var posti = ctrlLayer.effect(\"Posterize(0=FPS)\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Get text index for character-specific timing\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Calculate character-specific time offset\n" +
+    "  var timeOffset = idx * thisComp.frameDuration * 0.1;\n" +
+    "  \n" +
+    "  // Current time with offset\n" +
+    "  var currentTime = time + timeOffset;\n" +
+    "  \n" +
+    "  // Character-specific seed\n" +
+    "  var characterSeed = seed + idx;\n" +
+    "  \n" +
+    "  // Apply smooth wiggle or standard wiggle based on setting\n" +
+    "  if (smooth) {\n" +
+    "    // Smooth wiggle using sine waves for natural motion\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    var randomPhase = random(0, Math.PI * 2);\n" +
+    "    Math.sin(currentTime * freq * Math.PI * 2 + randomPhase) * amp;\n" +
+    "  } else {\n" +
+    "    // Standard wiggle with character-specific timing and seed\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    wiggle(freq, amp, 1, 0.5, currentTime);\n" +
+    "  }\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }
@@ -331,51 +331,51 @@ if (!globalEnable || !wiggleEnabled) {
  * @returns {String} Wiggle distortion expression
  */
 function generateWiggleDistortionExpression(controlLayerName) {
-  var expressionCode = `
-// Wiggle Distortion expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable || !wiggleEnabled) {
-  0;
-} else {
-  // Cache effect references
-  var freq = ctrlLayer.effect("Fluc/Sec")("Point")[0]; // Use X frequency for distortion
-  var amp = ctrlLayer.effect("Wiggle Distortion")("Slider");
-  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");
-  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Get text index for character-specific timing
-  var idx = textIndex;
-  
-  // Calculate character-specific time offset
-  var timeOffset = idx * thisComp.frameDuration * 0.1;
-  
-  // Current time with offset
-  var currentTime = time + timeOffset;
-  
-  // Character-specific seed
-  var characterSeed = seed + idx;
-  
-  // Apply smooth wiggle or standard wiggle based on setting
-  if (smooth) {
-    // Smooth wiggle using sine waves for natural motion
-    seedRandom(characterSeed);
-    var randomPhase = random(0, Math.PI * 2);
-    Math.sin(currentTime * freq * Math.PI * 2 + randomPhase) * amp;
-  } else {
-    // Standard wiggle with character-specific timing and seed
-    seedRandom(characterSeed);
-    wiggle(freq, amp, 1, 0.5, currentTime);
-  }
-}`;
+  var expressionCode =
+    "// Wiggle Distortion expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "var wiggleEnabled = ctrlLayer.effect(\"Wiggle Add\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable || !wiggleEnabled) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var freq = ctrlLayer.effect(\"Fluc/Sec\")(\"Point\")[0]; // Use X frequency for distortion\n" +
+    "  var amp = ctrlLayer.effect(\"Wiggle Distortion\")(\"Slider\");\n" +
+    "  var seed = ctrlLayer.effect(\"Wiggle Seed\")(\"Slider\");\n" +
+    "  var smooth = ctrlLayer.effect(\"Smooth Wiggle\")(\"Checkbox\");\n" +
+    "  var posti = ctrlLayer.effect(\"Posterize(0=FPS)\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Get text index for character-specific timing\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Calculate character-specific time offset\n" +
+    "  var timeOffset = idx * thisComp.frameDuration * 0.1;\n" +
+    "  \n" +
+    "  // Current time with offset\n" +
+    "  var currentTime = time + timeOffset;\n" +
+    "  \n" +
+    "  // Character-specific seed\n" +
+    "  var characterSeed = seed + idx;\n" +
+    "  \n" +
+    "  // Apply smooth wiggle or standard wiggle based on setting\n" +
+    "  if (smooth) {\n" +
+    "    // Smooth wiggle using sine waves for natural motion\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    var randomPhase = random(0, Math.PI * 2);\n" +
+    "    Math.sin(currentTime * freq * Math.PI * 2 + randomPhase) * amp;\n" +
+    "  } else {\n" +
+    "    // Standard wiggle with character-specific timing and seed\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    wiggle(freq, amp, 1, 0.5, currentTime);\n" +
+    "  }\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }

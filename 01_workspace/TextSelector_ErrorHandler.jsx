@@ -545,14 +545,7 @@ function compareVersions(version1, version2) {
  * @returns {String} Expression with try-catch block
  */
 function generateSafeExpression(expressionCode, fallbackValue) {
-  return `
-try {
-    ${expressionCode}
-} catch (err) {
-    // TextSelector Error Handler
-    // Log error for debugging
-    ${fallbackValue || "value"};
-}`;
+  return "try {" + expressionCode + "} catch (err) {" + fallbackValue + "};";
 }
 
 /**

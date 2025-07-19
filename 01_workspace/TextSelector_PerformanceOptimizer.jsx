@@ -209,12 +209,13 @@ function applyEarlyExitOptimization(expression) {
     // Determine the appropriate default value based on expression content
     var defaultValue = getDefaultValueForExpression(optimized);
 
-    var earlyExitCode = `
-// Early exit if disabled
-if (!globalEnable) {
-  ${defaultValue};
-} else {
-`;
+    var earlyExitCode =
+      "\n// Early exit if disabled\n" +
+      "if (!globalEnable) {\n" +
+      "  " +
+      defaultValue +
+      ";\n" +
+      "} else {\n";
 
     // Find a good insertion point after variable declarations
     var insertPoint = optimized.indexOf("var globalEnable");
@@ -244,12 +245,13 @@ if (!globalEnable) {
   ) {
     var wiggleDefaultValue = getDefaultValueForExpression(optimized);
 
-    var wiggleEarlyExitCode = `
-// Early exit if wiggle disabled
-if (!wiggleEnabled) {
-  ${wiggleDefaultValue};
-} else {
-`;
+    var wiggleEarlyExitCode =
+      "\n// Early exit if wiggle disabled\n" +
+      "if (!wiggleEnabled) {\n" +
+      "  " +
+      wiggleDefaultValue +
+      ";\n" +
+      "} else {\n";
 
     // Find a good insertion point after wiggleEnabled declaration
     var wiggleInsertPoint = optimized.indexOf("var wiggleEnabled");
@@ -299,11 +301,10 @@ function applyPosterizeTimeOptimization(expression) {
     optimized.indexOf("time") !== -1
   ) {
     // Create posterize code
-    var posterizeCode = `
-// Apply posterize time for performance
-var posti = effect("Posterize(0=FPS)")("Slider");
-posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-`;
+    var posterizeCode =
+      "// Apply posterize time for performance\n" +
+      'var posti = effect("Posterize(0=FPS)")("Slider");\n' +
+      "posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n";
 
     // Replace with cached version if applicable
     if (

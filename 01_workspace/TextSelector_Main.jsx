@@ -595,12 +595,12 @@ function createDistributionPackage(outputPath) {
         "\n\n" +
         "A modular system for text animation in After Effects.\n\n" +
         "## Installation\n\n" +
-        "1. Copy all files from the `src` folder to your After Effects Scripts folder\n" +
+        "1. Copy all files from the src folder to your After Effects Scripts folder\n" +
         "2. In After Effects, run File > Scripts > TextSelector_Main.jsx\n\n" +
         "## Documentation\n\n" +
-        "See the `docs` folder for detailed documentation.\n\n" +
+        "See the docs folder for detailed documentation.\n\n" +
         "## Examples\n\n" +
-        "See the `examples` folder for example projects.\n\n" +
+        "See the examples folder for example projects.\n\n" +
         "© 2025 TextSelector Team"
     );
     readmeFile.close();
@@ -614,16 +614,16 @@ function createDistributionPackage(outputPath) {
         "- 4GB RAM minimum, 8GB recommended\n\n" +
         "## Installation Steps\n\n" +
         "1. Close After Effects if it's running\n" +
-        "2. Copy all files from the `src` folder to your After Effects Scripts folder:\n" +
-        "   - Windows: `C:\\Program Files\\Adobe\\Adobe After Effects [version]\\Support Files\\Scripts`\n" +
-        "   - Mac: `/Applications/Adobe After Effects [version]/Scripts`\n" +
+        "2. Copy all files from the src folder to your After Effects Scripts folder:\n" +
+        "   - Windows: C:\\Program Files\\Adobe\\Adobe After Effects [version]\\Support Files\\Scripts\n" +
+        "   - Mac: /Applications/Adobe After Effects [version]/Scripts\n" +
         "3. Start After Effects\n" +
         "4. Go to File > Scripts > TextSelector_Main.jsx\n\n" +
         "## Troubleshooting\n\n" +
         "If the script doesn't appear in the Scripts menu, make sure:\n" +
         "- You have permission to write to the Scripts folder\n" +
         "- You've enabled 'Allow Scripts to Write Files and Access Network' in Preferences > General\n\n" +
-        "For further assistance, see the documentation in the `docs` folder."
+        "For further assistance, see the documentation in the docs folder."
     );
     installFile.close();
 

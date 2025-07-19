@@ -132,33 +132,34 @@ function applyRandomExpressions(textLayer, controlLayerName) {
  * @returns {String} Optimized expression with error handling
  */
 function generate2WayRandomizerExpression(controlLayerName) {
-  var expressionCode = `
-// 2-Way Position Randomizer Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-    var seed = ctrlLayer.effect("SeedRandom")("Slider");
-    
-    // Check if 2-way mode is active
-    var is2Way = (aniStyle == 2 || aniStyle == 3);
-    
-    if (is2Way) {
-        // Set random seed for consistency
-        seedRandom(seed + textIndex, true);
-        
-        // Alternate based on character index
-        var isEven = (textIndex % 2) == 0;
-        isEven ? selectorValue : -selectorValue;
-    } else {
-        // Single mode - use normal value
-        selectorValue;
-    }
-    
-} catch (err) {
-    // Fallback to normal value
-    selectorValue;
-}`;
-
+  var expressionCode =
+    "// 2-Way Position Randomizer Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    '    var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    '    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");\n' +
+    '    var seed = ctrlLayer.effect("SeedRandom")("Slider");\n' +
+    "    \n" +
+    "    // Check if 2-way mode is active\n" +
+    "    var is2Way = (aniStyle == 2 || aniStyle == 3);\n" +
+    "    \n" +
+    "    if (is2Way) {\n" +
+    "        // Set random seed for consistency\n" +
+    "        seedRandom(seed + textIndex, true);\n" +
+    "        \n" +
+    "        // Alternate based on character index\n" +
+    "        var isEven = (textIndex % 2) == 0;\n" +
+    "        isEven ? selectorValue : -selectorValue;\n" +
+    "    } else {\n" +
+    "        // Single mode - use normal value\n" +
+    "        selectorValue;\n" +
+    "    }\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    // Fallback to normal value\n" +
+    "    selectorValue;\n" +
+    "}";
   return expressionCode;
 }
 
@@ -168,33 +169,29 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generateScaleRandomizerExpression(controlLayerName) {
-  var expressionCode = `
-// Scale Randomizer Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-    var seed = ctrlLayer.effect("SeedRandom")("Slider");
-    var scaleEnabled = ctrlLayer.effect("Scale : ON")("Checkbox");
-    
-    // Check if 2-way mode is active and scale is enabled
-    var is2Way = (aniStyle == 2 || aniStyle == 3);
-    
-    if (is2Way && scaleEnabled) {
-        // Set random seed for consistency
-        seedRandom(seed + textIndex + 100, true);
-        
-        // Alternate based on character index
-        var isEven = (textIndex % 2) == 0;
-        isEven ? selectorValue : -selectorValue;
-    } else {
-        // Single mode or disabled - use normal value
-        selectorValue;
-    }
-    
-} catch (err) {
-    // Fallback to normal value
-    selectorValue;
-}`;
+  var expressionCode =
+    "// Scale Randomizer Expression for TextSelector v2.0" +
+    "try {" +
+    "    var ctrlLayer = thisComp.layer(" +
+    controlLayerName +
+    ");" +
+    "var aniStyle = ctrlLayer.effect('Ani - Style')(Slider);" +
+    "var seed = ctrlLayer.effect('SeedRandom')(Slider);" +
+    "var scaleEnabled = ctrlLayer.effect('Scale : ON')(Checkbox);" +
+    "var is2Way = (aniStyle == 2 || aniStyle == 3);" +
+    "if (is2Way && scaleEnabled) {" +
+    "seedRandom(seed + textIndex + 100, true);" +
+    "var isEven = (textIndex % 2) == 0;" +
+    "isEven ? selectorValue : -selectorValue;" +
+    "} else {" +
+    "selectorValue;" +
+    "}" +
+    "} catch (err) {" +
+    "selectorValue;" +
+    "}" +
+    "} catch (err) {" +
+    "selectorValue;" +
+    "}";
 
   return expressionCode;
 }
@@ -205,33 +202,38 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generateRotationRandomizerExpression(controlLayerName) {
-  var expressionCode = `
-// Rotation Randomizer Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-    var seed = ctrlLayer.effect("SeedRandom")("Slider");
-    var rotationEnabled = ctrlLayer.effect("Rotation : ON")("Checkbox");
-    
-    // Check if 2-way mode is active and rotation is enabled
-    var is2Way = (aniStyle == 2 || aniStyle == 3);
-    
-    if (is2Way && rotationEnabled) {
-        // Set random seed for consistency
-        seedRandom(seed + textIndex + 200, true);
-        
-        // Alternate based on character index
-        var isEven = (textIndex % 2) == 0;
-        isEven ? selectorValue : -selectorValue;
-    } else {
-        // Single mode or disabled - use normal value
-        selectorValue;
-    }
-    
-} catch (err) {
-    // Fallback to normal value
-    selectorValue;
-}`;
+  var expressionCode =
+    "// Rotation Randomizer Expression for TextSelector v2.0" +
+    "try {" +
+    "var ctrlLayer = thisComp.layer(" +
+    controlLayerName +
+    ");" +
+    "var aniStyle = ctrlLayer.effect('Ani - Style')('Slider');" +
+    "var seed = ctrlLayer.effect('SeedRandom')('Slider');" +
+    "var rotationEnabled = ctrlLayer.effect('Rotation : ON')('Checkbox');" +
+    "// Check if 2-way mode is active and rotation is enabled" +
+    "var is2Way = (aniStyle == 2 || aniStyle == 3);";
+  "if (is2Way && rotationEnabled) {" +
+    "// Set random seed for consistency" +
+    "seedRandom(seed + textIndex + 200, true);" +
+    "var isEven = (textIndex % 2) == 0;" +
+    "isEven ? selectorValue : -selectorValue;" +
+    "} else {" +
+    "selectorValue;" +
+    "}" +
+    "} catch (err) {" +
+    "selectorValue;" +
+    "// Alternate based on character index" +
+    "var isEven = (textIndex % 2) == 0;" +
+    "isEven ? selectorValue : -selectorValue;" +
+    "} else {" +
+    "// Single mode or disabled - use normal value" +
+    "selectorValue;" +
+    "}" +
+    "} catch (err) {" +
+    "// Fallback to normal value" +
+    "selectorValue;" +
+    "}";
 
   return expressionCode;
 }
@@ -242,33 +244,35 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generateDistortionRandomizerExpression(controlLayerName) {
-  var expressionCode = `
-// Distortion Randomizer Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-    var seed = ctrlLayer.effect("SeedRandom")("Slider");
-    var distortionEnabled = ctrlLayer.effect("Distortion : ON")("Checkbox");
-    
-    // Check if 2-way mode is active and distortion is enabled
-    var is2Way = (aniStyle == 2 || aniStyle == 3);
-    
-    if (is2Way && distortionEnabled) {
-        // Set random seed for consistency
-        seedRandom(seed + textIndex + 300, true);
-        
-        // Alternate based on character index
-        var isEven = (textIndex % 2) == 0;
-        isEven ? selectorValue : -selectorValue;
-    } else {
-        // Single mode or disabled - use normal value
-        selectorValue;
-    }
-    
-} catch (err) {
-    // Fallback to normal value
-    selectorValue;
-}`;
+  var expressionCode =
+    "// Distortion Randomizer Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    '    var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    '    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");\n' +
+    '    var seed = ctrlLayer.effect("SeedRandom")("Slider");\n' +
+    '    var distortionEnabled = ctrlLayer.effect("Distortion : ON")("Checkbox");\n' +
+    "    \n" +
+    "    // Check if 2-way mode is active and distortion is enabled\n" +
+    "    var is2Way = (aniStyle == 2 || aniStyle == 3);\n" +
+    "    \n" +
+    "    if (is2Way && distortionEnabled) {\n" +
+    "        // Set random seed for consistency\n" +
+    "        seedRandom(seed + textIndex + 300, true);\n" +
+    "        \n" +
+    "        // Alternate based on character index\n" +
+    "        var isEven = (textIndex % 2) == 0;\n" +
+    "        isEven ? selectorValue : -selectorValue;\n" +
+    "    } else {\n" +
+    "        // Single mode or disabled - use normal value\n" +
+    "        selectorValue;\n" +
+    "    }\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    // Fallback to normal value\n" +
+    "    selectorValue;\n" +
+    "}";
 
   return expressionCode;
 }
@@ -279,32 +283,34 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generateRandomPositionExpression(controlLayerName) {
-  var expressionCode = `
-// Random Position Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-    var seed = ctrlLayer.effect("SeedRandom")("Slider");
-    var prop = ctrlLayer.effect("Ani - Position")("Point");
-    
-    // Check if 2-way mode is active
-    var is2Way = (aniStyle == 2 || aniStyle == 3);
-    
-    if (is2Way) {
-        // Set random seed for consistency
-        seedRandom(seed + textIndex, true);
-        
-        // Generate random position within composition bounds
-        [random(-thisComp.width/2, thisComp.width/2), random(-thisComp.height/2, thisComp.height/2)];
-    } else {
-        // Single mode - use manual position
-        prop;
-    }
-    
-} catch (err) {
-    // Fallback to [0,0]
-    [0,0];
-}`;
+  var expressionCode =
+    "// Random Position Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    '    var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    '    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");\n' +
+    '    var seed = ctrlLayer.effect("SeedRandom")("Slider");\n' +
+    '    var prop = ctrlLayer.effect("Ani - Position")("Point");\n' +
+    "    \n" +
+    "    // Check if 2-way mode is active\n" +
+    "    var is2Way = (aniStyle == 2 || aniStyle == 3);\n" +
+    "    \n" +
+    "    if (is2Way) {\n" +
+    "        // Set random seed for consistency\n" +
+    "        seedRandom(seed + textIndex, true);\n" +
+    "        \n" +
+    "        // Generate random position within composition bounds\n" +
+    "        [random(-thisComp.width/2, thisComp.width/2), random(-thisComp.height/2, thisComp.height/2)];\n" +
+    "    } else {\n" +
+    "        // Single mode - use manual position\n" +
+    "        prop;\n" +
+    "    }\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    // Fallback to [0,0]\n" +
+    "    [0,0];\n" +
+    "}";
 
   return expressionCode;
 }

@@ -129,33 +129,29 @@ function applyAnimationExpressions(textLayer, controlLayerName) {
  * @returns {String} Optimized expression with error handling
  */
 function generatePositionYExpression(controlLayerName) {
-  var expressionCode = `
-// Optimized Position Y Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    
+  var expressionCode =
+    "// Optimized Position Y Expression for TextSelector v2.0" +
+    "try {" +
+    "var ctrlLayer = thisComp.layer(" +
+    controlLayerName +
+    ");" +
     // Cache effect references
-    var delay = ctrlLayer.effect("Delay")("Slider");
-    var styledp = ctrlLayer.effect("Ani - Style")("Slider");
-    var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-    
-    // Posterize time optimization
-    var frameRate = 1/thisComp.frameDuration;
-    var targetFPS = (posti == 0) ? frameRate : posti;
-    posterizeTime(targetFPS);
-    
+    'var delay = ctrlLayer.effect("Delay")("Slider");' +
+    'var styledp = ctrlLayer.effect("Ani - Style")("Slider");' +
+    'var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");' +
+    "var frameRate = 1/thisComp.frameDuration;" +
+    "var targetFPS = (posti == 0) ? frameRate : posti;" +
+    "posterizeTime(targetFPS);" +
     // Calculate delay with style consideration
-    var delayMultiplier = (styledp == 2) ? 2 : 1;
-    var d = delay * delayMultiplier * thisComp.frameDuration * (textIndex - 1);
-    
+    "var delayMultiplier = (styledp == 2) ? 2 : 1;" +
+    "var d = delay * delayMultiplier * thisComp.frameDuration * (textIndex - 1);" +
     // Get animation value with error handling
-    var animValue = ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);
-    animValue;
-    
-} catch (err) {
+    'var animValue = ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);' +
+    "animValue;" +
+    "} catch (err) {" +
     // Fallback value
-    0;
-}`;
+    "0;" +
+    "}";
 
   return expressionCode;
 }
@@ -166,30 +162,31 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generatePositionXExpression(controlLayerName) {
-  var expressionCode = `
-// Optimized Position X Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    
-    var delay = ctrlLayer.effect("Delay")("Slider");
-    var styledp = ctrlLayer.effect("Ani - Style")("Slider");
-    var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-    
-    var frameRate = 1/thisComp.frameDuration;
-    var targetFPS = (posti == 0) ? frameRate : posti;
-    posterizeTime(targetFPS);
-    
-    // X position uses style 3 for 2-way
-    var delayMultiplier = (styledp == 3) ? 2 : 1;
-    var d = delay * delayMultiplier * thisComp.frameDuration * (textIndex - 1);
-    
-    var animValue = ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);
-    animValue;
-    
-} catch (err) {
-    0;
-}`;
-
+  var expressionCode =
+    "// Optimized Position X Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    '    var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    "    \n" +
+    '    var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    '    var styledp = ctrlLayer.effect("Ani - Style")("Slider");\n' +
+    '    var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "    \n" +
+    "    var frameRate = 1/thisComp.frameDuration;\n" +
+    "    var targetFPS = (posti == 0) ? frameRate : posti;\n" +
+    "    posterizeTime(targetFPS);\n" +
+    "    \n" +
+    "    // X position uses style 3 for 2-way\n" +
+    "    var delayMultiplier = (styledp == 3) ? 2 : 1;\n" +
+    "    var d = delay * delayMultiplier * thisComp.frameDuration * (textIndex - 1);\n" +
+    "    \n" +
+    '    var animValue = ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);\n' +
+    "    animValue;\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    0;\n" +
+    "}";
   return expressionCode;
 }
 
@@ -199,26 +196,27 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generate2WayRandomizerExpression(controlLayerName) {
-  var expressionCode = `
-// Optimized 2-Way Randomizer Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-    
-    // Check if 2-way mode is active
-    var is2Way = (aniStyle == 2 || aniStyle == 3);
-    
-    if (is2Way) {
-        var isEven = (textIndex % 2) == 0;
-        isEven ? selectorValue : -selectorValue;
-    } else {
-        selectorValue;
-    }
-    
-} catch (err) {
-    selectorValue;
-}`;
-
+  var expressionCode =
+    "// Optimized 2-Way Randomizer Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    '    var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    '    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");\n' +
+    "    \n" +
+    "    // Check if 2-way mode is active\n" +
+    "    var is2Way = (aniStyle == 2 || aniStyle == 3);\n" +
+    "    \n" +
+    "    if (is2Way) {\n" +
+    "        var isEven = (textIndex % 2) == 0;\n" +
+    "        isEven ? selectorValue : -selectorValue;\n" +
+    "    } else {\n" +
+    "        selectorValue;\n" +
+    "    }\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    selectorValue;\n" +
+    "}";
   return expressionCode;
 }
 

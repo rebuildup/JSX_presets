@@ -39,24 +39,30 @@ function generateSafeExpression(
   // Create debug info section if requested
   var debugSection = "";
   if (includeDebugInfo) {
-    debugSection = `
-    // Log error for debugging
-    try {
-      var debugLayer = thisComp.layer("TextSelector_Controls");
-      if (debugLayer.effect("Debug Mode")("Checkbox")) {
-        $.writeln("TextSelector Error: " + err.toString() + " in property: " + thisProperty.name);
-      }
-    } catch(e) {}`;
+    debugSection =
+      "\n    // Log error for debugging\n" +
+      "    try {\n" +
+      '      var debugLayer = thisComp.layer("TextSelector_Controls");\n' +
+      '      if (debugLayer.effect("Debug Mode")("Checkbox")) {\n' +
+      '        $.writeln("TextSelector Error: " + err.toString() + " in property: " + thisProperty.name);\n' +
+      "      }\n" +
+      "    } catch(e) {}";
   }
 
   // Build the safe expression
-  return `
-try {
-    ${expressionCode}
-} catch (err) {
-    // TextSelector Error Handler${debugSection}
-    ${fallbackStr};
-}`;
+  return 
+    "\ntry {\n" +
+    "    " +
+    expressionCode +
+    "\n" +
+    "} catch (err) {\n" +
+    "    // TextSelector Error Handler" +
+    debugSection +
+    "\n" +
+    "    " +
+    fallbackStr +
+    ";\n" +
+    "}";
 }
 
 /**
@@ -127,30 +133,32 @@ function getExpressionTemplate(templateName) {
  * @returns {String} The template expression
  */
 function getPositionYTemplate() {
-  return `
-// Position Y Selector expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var delay = ctrlLayer.effect("Delay")("Slider");
-  var styledp = ctrlLayer.effect("Ani-Style")("Slider");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Calculate delay based on animation style
-  var d = (styledp == 2 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);
-  
-  // Get animation value at delayed time
-  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);
-}`;
+  return (
+    "\n" +
+    "// Position Y Selector expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    '  var styledp = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Calculate delay based on animation style\n" +
+    "  var d = (styledp == 2 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);\n" +
+    "  \n" +
+    "  // Get animation value at delayed time\n" +
+    '  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);\n' +
+    "}"
+  );
 }
 
 /**
@@ -158,30 +166,30 @@ if (!globalEnable) {
  * @returns {String} The template expression
  */
 function getPositionXTemplate() {
-  return `
-// Position X Selector expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var delay = ctrlLayer.effect("Delay")("Slider");
-  var styledp = ctrlLayer.effect("Ani-Style")("Slider");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Calculate delay based on animation style
-  var d = (styledp == 3 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);
-  
-  // Get animation value at delayed time
-  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);
-}`;
+  return 
+    "// Position X Selector expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    '  var styledp = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Calculate delay based on animation style\n" +
+    "  var d = (styledp == 3 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);\n" +
+    "  \n" +
+    "  // Get animation value at delayed time\n" +
+    '  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);\n' +
+    "}";
 }
 
 /**
@@ -189,28 +197,28 @@ if (!globalEnable) {
  * @returns {String} The template expression
  */
 function getTwoWayRandomizerTemplate() {
-  return `
-// 2-way Randomizer expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  selectorValue;
-} else {
-  // Cache effect references
-  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");
-  
-  // Apply 2-way randomization based on animation style
-  if (aniStyle == 2 || aniStyle == 3) {
-    // Alternate positive/negative based on textIndex
-    ((textIndex % 2) == 0) ? selectorValue : -selectorValue;
-  } else {
-    // Single mode - use normal selector value
-    selectorValue;
-  }
-}`;
+  return 
+    "// 2-way Randomizer expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  selectorValue;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    "  \n" +
+    "  // Apply 2-way randomization based on animation style\n" +
+    "  if (aniStyle == 2 || aniStyle == 3) {\n" +
+    "    // Alternate positive/negative based on textIndex\n" +
+    "    ((textIndex % 2) == 0) ? selectorValue : -selectorValue;\n" +
+    "  } else {\n" +
+    "    // Single mode - use normal selector value\n" +
+    "    selectorValue;\n" +
+    "  }\n" +
+    "}";
 }
 
 /**
@@ -218,37 +226,37 @@ if (!globalEnable) {
  * @returns {String} The template expression
  */
 function getOpacityTemplate() {
-  return `
-// Opacity expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  100;
-} else {
-  // Cache effect references
-  var opacityStyle = ctrlLayer.effect("Opacity-Style")("Slider");
-  var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");
-  var delay = ctrlLayer.effect("Delay")("Slider");
-  
-  // Initialize result
-  var result = 100;
-  
-  // Apply opacity based on style
-  if (opacityStyle == 1) {
-    // Auto mode
-    var framesSinceInPoint = (time - inPoint) / thisComp.frameDuration;
-    result = framesSinceInPoint <= 0 ? 100 : 0;
-  } else {
-    // Manual mode
-    var d = delay * thisComp.frameDuration * (textIndex - 1);
-    result = opacityManual.valueAtTime(time - d);
-  }
-  
-  result;
-}`;
+  return 
+    "// Opacity expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  100;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var opacityStyle = ctrlLayer.effect("Opacity-Style")("Slider");\n' +
+    '  var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");\n' +
+    '  var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = 100;\n" +
+    "  \n" +
+    "  // Apply opacity based on style\n" +
+    "  if (opacityStyle == 1) {\n" +
+    "    // Auto mode\n" +
+    "    var framesSinceInPoint = (time - inPoint) / thisComp.frameDuration;\n" +
+    "    result = framesSinceInPoint <= 0 ? 100 : 0;\n" +
+    "  } else {\n" +
+    "    // Manual mode\n" +
+    "    var d = delay * thisComp.frameDuration * (textIndex - 1);\n" +
+    "    result = opacityManual.valueAtTime(time - d);\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 }
 
 /**
@@ -256,56 +264,56 @@ if (!globalEnable) {
  * @returns {String} The template expression
  */
 function getScaleTemplate() {
-  return `
-// Scale expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  [100, 100];
-} else {
-  // Cache effect references
-  var scaleOn = ctrlLayer.effect("Scale : ON")("Checkbox");
-  var addScale = ctrlLayer.effect("Add Scale")("Point");
-  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Get text index and selector value
-  var idx = textIndex;
-  var selectorValue = effect("Selector").value;
-  
-  // Initialize result
-  var result = [100, 100];
-  
-  // Apply scale if enabled
-  if (scaleOn) {
-    if (aniStyle >= 2) {
-      // 2-way random mode
-      // Use seedRandom for consistent randomization
-      seedRandom(seedRandom + idx);
-      
-      // Generate random scale values within range -2000 to 2000
-      var randomX = random(-2000, 2000);
-      var randomY = random(-2000, 2000);
-      
-      // Apply selector value for animation
-      result = [
-        100 + randomX * selectorValue,
-        100 + randomY * selectorValue
-      ];
-    } else {
-      // Single mode - use manual values
-      result = [
-        100 + addScale[0] * selectorValue,
-        100 + addScale[1] * selectorValue
-      ];
-    }
-  }
-  
-  result;
-}`;
+  return 
+    "// Scale expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  [100, 100];\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var scaleOn = ctrlLayer.effect("Scale : ON")("Checkbox");\n' +
+    '  var addScale = ctrlLayer.effect("Add Scale")("Point");\n' +
+    '  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");\n' +
+    "  \n" +
+    "  // Get text index and selector value\n" +
+    "  var idx = textIndex;\n" +
+    '  var selectorValue = effect("Selector").value;\n' +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = [100, 100];\n" +
+    "  \n" +
+    "  // Apply scale if enabled\n" +
+    "  if (scaleOn) {\n" +
+    "    if (aniStyle >= 2) {\n" +
+    "      // 2-way random mode\n" +
+    "      // Use seedRandom for consistent randomization\n" +
+    "      seedRandom(seedRandom + idx);\n" +
+    "      \n" +
+    "      // Generate random scale values within range -2000 to 2000\n" +
+    "      var randomX = random(-2000, 2000);\n" +
+    "      var randomY = random(-2000, 2000);\n" +
+    "      \n" +
+    "      // Apply selector value for animation\n" +
+    "      result = [\n" +
+    "        100 + randomX * selectorValue,\n" +
+    "        100 + randomY * selectorValue\n" +
+    "      ];\n" +
+    "    } else {\n" +
+    "      // Single mode - use manual values\n" +
+    "      result = [\n" +
+    "        100 + addScale[0] * selectorValue,\n" +
+    "        100 + addScale[1] * selectorValue\n" +
+    "      ];\n" +
+    "    }\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 }
 
 /**
@@ -313,49 +321,49 @@ if (!globalEnable) {
  * @returns {String} The template expression
  */
 function getRotationTemplate() {
-  return `
-// Rotation expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var rotationOn = ctrlLayer.effect("Rotation : ON")("Checkbox");
-  var addRotation = ctrlLayer.effect("Add Rotation")("Slider");
-  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Get text index and selector value
-  var idx = textIndex;
-  var selectorValue = effect("Selector").value;
-  
-  // Initialize result
-  var result = 0;
-  
-  // Apply rotation if enabled
-  if (rotationOn) {
-    if (aniStyle >= 2) {
-      // 2-way random mode
-      // Use seedRandom for consistent randomization
-      seedRandom(seedRandom + idx);
-      
-      // Generate random rotation value within range -359 to 359
-      var randomRotation = random(-359, 359);
-      
-      // Apply selector value for animation
-      result = randomRotation * selectorValue;
-    } else {
-      // Single mode - use manual value
-      result = addRotation * selectorValue;
-    }
-  }
-  
-  result;
-}`;
+  return 
+    "// Rotation expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var rotationOn = ctrlLayer.effect("Rotation : ON")("Checkbox");\n' +
+    '  var addRotation = ctrlLayer.effect("Add Rotation")("Slider");\n' +
+    '  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");\n' +
+    "  \n" +
+    "  // Get text index and selector value\n" +
+    "  var idx = textIndex;\n" +
+    '  var selectorValue = effect("Selector").value;\n' +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = 0;\n" +
+    "  \n" +
+    "  // Apply rotation if enabled\n" +
+    "  if (rotationOn) {\n" +
+    "    if (aniStyle >= 2) {\n" +
+    "      // 2-way random mode\n" +
+    "      // Use seedRandom for consistent randomization\n" +
+    "      seedRandom(seedRandom + idx);\n" +
+    "      \n" +
+    "      // Generate random rotation value within range -359 to 359\n" +
+    "      var randomRotation = random(-359, 359);\n" +
+    "      \n" +
+    "      // Apply selector value for animation\n" +
+    "      result = randomRotation * selectorValue;\n" +
+    "    } else {\n" +
+    "      // Single mode - use manual value\n" +
+    "      result = addRotation * selectorValue;\n" +
+    "    }\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 }
 
 /**
@@ -363,49 +371,49 @@ if (!globalEnable) {
  * @returns {String} The template expression
  */
 function getDistortionTemplate() {
-  return `
-// Distortion expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var distortionOn = ctrlLayer.effect("Distortion : ON")("Checkbox");
-  var addDistortion = ctrlLayer.effect("Add Distortion")("Slider");
-  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Get text index and selector value
-  var idx = textIndex;
-  var selectorValue = effect("Selector").value;
-  
-  // Initialize result
-  var result = 0;
-  
-  // Apply distortion if enabled
-  if (distortionOn) {
-    if (aniStyle >= 2) {
-      // 2-way random mode
-      // Use seedRandom for consistent randomization
-      seedRandom(seedRandom + idx);
-      
-      // Generate random distortion value within range -70 to 70
-      var randomDistortion = random(-70, 70);
-      
-      // Apply selector value for animation
-      result = randomDistortion * selectorValue;
-    } else {
-      // Single mode - use manual value
-      result = addDistortion * selectorValue;
-    }
-  }
-  
-  result;
-}`;
+  return 
+    "// Distortion expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var distortionOn = ctrlLayer.effect("Distortion : ON")("Checkbox");\n' +
+    '  var addDistortion = ctrlLayer.effect("Add Distortion")("Slider");\n' +
+    '  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");\n' +
+    "  \n" +
+    "  // Get text index and selector value\n" +
+    "  var idx = textIndex;\n" +
+    '  var selectorValue = effect("Selector").value;\n' +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = 0;\n" +
+    "  \n" +
+    "  // Apply distortion if enabled\n" +
+    "  if (distortionOn) {\n" +
+    "    if (aniStyle >= 2) {\n" +
+    "      // 2-way random mode\n" +
+    "      // Use seedRandom for consistent randomization\n" +
+    "      seedRandom(seedRandom + idx);\n" +
+    "      \n" +
+    "      // Generate random distortion value within range -70 to 70\n" +
+    "      var randomDistortion = random(-70, 70);\n" +
+    "      \n" +
+    "      // Apply selector value for animation\n" +
+    "      result = randomDistortion * selectorValue;\n" +
+    "    } else {\n" +
+    "      // Single mode - use manual value\n" +
+    "      result = addDistortion * selectorValue;\n" +
+    "    }\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 }
 
 /**
@@ -413,38 +421,38 @@ if (!globalEnable) {
  * @returns {String} The template expression
  */
 function getWigglePositionTemplate() {
-  return `
-// Wiggle Position expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable || !wiggleEnabled) {
-  [0, 0];
-} else {
-  // Cache effect references
-  var freq = ctrlLayer.effect("Fluc/Sec")("Point");
-  var amp = ctrlLayer.effect("Wiggle Position")("Point");
-  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");
-  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Get text index for character-specific timing
-  var idx = textIndex;
-  
-  // Calculate character-specific time offset
-  var timeOffset = idx * thisComp.frameDuration * 0.1;
-  
-  // Current time with offset
-  var currentTime = time + timeOffset;
-  
-  // Character-specific seed
-  var characterSeed = seed + idx;
+  return 
+    "// Wiggle Position expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    'var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable || !wiggleEnabled) {\n" +
+    "  [0, 0];\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var freq = ctrlLayer.effect("Fluc/Sec")("Point");\n' +
+    '  var amp = ctrlLayer.effect("Wiggle Position")("Point");\n' +
+    '  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");\n' +
+    '  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");\n' +
+    '  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Get text index for character-specific timing\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Calculate character-specific time offset\n" +
+    "  var timeOffset = idx * thisComp.frameDuration * 0.1;\n" +
+    "  \n" +
+    "  // Current time with offset\n" +
+    "  var currentTime = time + timeOffset;\n" +
+    "  \n" +
+    "  // Character-specific seed\n" +
+    "  var characterSeed = seed + idx;\n";
   
   // Apply smooth wiggle or standard wiggle based on setting
   if (smooth) {
@@ -462,7 +470,7 @@ if (!globalEnable || !wiggleEnabled) {
       wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]
     ];
   }
-}`;
+}";
 }
 
 /**
@@ -470,59 +478,59 @@ if (!globalEnable || !wiggleEnabled) {
  * @returns {String} The template expression
  */
 function getWiggleScaleTemplate() {
-  return `
-// Wiggle Scale expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable || !wiggleEnabled) {
-  [100, 100];
-} else {
-  // Cache effect references
-  var freq = ctrlLayer.effect("Fluc/Sec")("Point");
-  var amp = ctrlLayer.effect("Wiggle Scale")("Point");
-  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");
-  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Get text index for character-specific timing
-  var idx = textIndex;
-  
-  // Calculate character-specific time offset
-  var timeOffset = idx * thisComp.frameDuration * 0.1;
-  
-  // Current time with offset
-  var currentTime = time + timeOffset;
-  
-  // Character-specific seed
-  var characterSeed = seed + idx;
-  
-  // Base scale value (100%)
-  var baseScale = [100, 100];
-  
-  // Apply smooth wiggle or standard wiggle based on setting
-  if (smooth) {
-    // Smooth wiggle using sine waves for natural motion
-    seedRandom(characterSeed);
-    var randomPhase = random(0, Math.PI * 2);
-    var x = Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];
-    var y = Math.sin(currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI/2) * amp[1];
-    [baseScale[0] + x, baseScale[1] + y];
-  } else {
-    // Standard wiggle with character-specific timing and seed
-    seedRandom(characterSeed);
-    [
-      baseScale[0] + wiggle(freq[0], amp[0], 1, 0.5, currentTime)[0],
-      baseScale[1] + wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]
-    ];
-  }
-}`;
+  return 
+    "// Wiggle Scale expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    'var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable || !wiggleEnabled) {\n" +
+    "  [100, 100];\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var freq = ctrlLayer.effect("Fluc/Sec")("Point");\n' +
+    '  var amp = ctrlLayer.effect("Wiggle Scale")("Point");\n' +
+    '  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");\n' +
+    '  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");\n' +
+    '  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Get text index for character-specific timing\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Calculate character-specific time offset\n" +
+    "  var timeOffset = idx * thisComp.frameDuration * 0.1;\n" +
+    "  \n" +
+    "  // Current time with offset\n" +
+    "  var currentTime = time + timeOffset;\n" +
+    "  \n" +
+    "  // Character-specific seed\n" +
+    "  var characterSeed = seed + idx;\n" +
+    "  \n" +
+    "  // Base scale value (100%)\n" +
+    "  var baseScale = [100, 100];\n" +
+    "  \n" +
+    "  // Apply smooth wiggle or standard wiggle based on setting\n" +
+    "  if (smooth) {\n" +
+    "    // Smooth wiggle using sine waves for natural motion\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    var randomPhase = random(0, Math.PI * 2);\n" +
+    "    var x = Math.sin(currentTime * freq[0] * Math.PI * 2 + randomPhase) * amp[0];\n" +
+    "    var y = Math.sin(currentTime * freq[1] * Math.PI * 2 + randomPhase + Math.PI/2) * amp[1];\n" +
+    "    [baseScale[0] + x, baseScale[1] + y];\n" +
+    "  } else {\n" +
+    "    // Standard wiggle with character-specific timing and seed\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    [\n" +
+    "      baseScale[0] + wiggle(freq[0], amp[0], 1, 0.5, currentTime)[0],\n" +
+    "      baseScale[1] + wiggle(freq[1], amp[1], 1, 0.5, currentTime)[1]\n" +
+    "    ];\n" +
+    "  }\n" +
+    "}";
 }
 
 /**
@@ -530,51 +538,51 @@ if (!globalEnable || !wiggleEnabled) {
  * @returns {String} The template expression
  */
 function getWiggleRotationTemplate() {
-  return `
-// Wiggle Rotation expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("\${CONTROL_LAYER}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable || !wiggleEnabled) {
-  0;
-} else {
-  // Cache effect references
-  var freq = ctrlLayer.effect("Fluc/Sec")("Point")[0]; // Use X frequency for rotation
-  var amp = ctrlLayer.effect("Wiggle Rotation")("Slider");
-  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");
-  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Get text index for character-specific timing
-  var idx = textIndex;
-  
-  // Calculate character-specific time offset
-  var timeOffset = idx * thisComp.frameDuration * 0.1;
-  
-  // Current time with offset
-  var currentTime = time + timeOffset;
-  
-  // Character-specific seed
-  var characterSeed = seed + idx;
-  
-  // Apply smooth wiggle or standard wiggle based on setting
-  if (smooth) {
-    // Smooth wiggle using sine waves for natural motion
-    seedRandom(characterSeed);
-    var randomPhase = random(0, Math.PI * 2);
-    Math.sin(currentTime * freq * Math.PI * 2 + randomPhase) * amp;
-  } else {
-    // Standard wiggle with character-specific timing and seed
-    seedRandom(characterSeed);
-    wiggle(freq, amp, 1, 0.5, currentTime);
-  }
-}`;
+  return 
+    "// Wiggle Rotation expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("${CONTROL_LAYER}");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    'var wiggleEnabled = ctrlLayer.effect("Wiggle Add")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable || !wiggleEnabled) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var freq = ctrlLayer.effect("Fluc/Sec")("Point")[0]; // Use X frequency for rotation\n' +
+    '  var amp = ctrlLayer.effect("Wiggle Rotation")("Slider");\n' +
+    '  var seed = ctrlLayer.effect("Wiggle Seed")("Slider");\n' +
+    '  var smooth = ctrlLayer.effect("Smooth Wiggle")("Checkbox");\n' +
+    '  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Get text index for character-specific timing\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Calculate character-specific time offset\n" +
+    "  var timeOffset = idx * thisComp.frameDuration * 0.1;\n" +
+    "  \n" +
+    "  // Current time with offset\n" +
+    "  var currentTime = time + timeOffset;\n" +
+    "  \n" +
+    "  // Character-specific seed\n" +
+    "  var characterSeed = seed + idx;\n" +
+    "  \n" +
+    "  // Apply smooth wiggle or standard wiggle based on setting\n" +
+    "  if (smooth) {\n" +
+    "    // Smooth wiggle using sine waves for natural motion\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    var randomPhase = random(0, Math.PI * 2);\n" +
+    "    Math.sin(currentTime * freq * Math.PI * 2 + randomPhase) * amp;\n" +
+    "  } else {\n" +
+    "    // Standard wiggle with character-specific timing and seed\n" +
+    "    seedRandom(characterSeed);\n" +
+    "    wiggle(freq, amp, 1, 0.5, currentTime);\n" +
+    "  }\n" +
+    "}";
 }
 
 /**
@@ -647,12 +655,11 @@ function applyEarlyExitOptimization(expression) {
 
   // Add global enable check if not present
   if (expression.indexOf("globalEnable") !== -1) {
-    var earlyExitCode = `
-// Early exit if disabled
-if (!globalEnable) {
-  ${getDefaultValueForExpression(expression)};
-} else {
-`;
+    var earlyExitCode = 
+      "\n// Early exit if disabled\n" +
+      "if (!globalEnable) {\n" +
+      "  " + getDefaultValueForExpression(expression) + ";\n" +
+      "} else {\n";
 
     // Find a good insertion point
     var insertPoint = expression.indexOf("var globalEnable");

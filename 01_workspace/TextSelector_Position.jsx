@@ -173,51 +173,50 @@ function applyPositionExpressions(textLayer, controlLayerName) {
  * @returns {String} Optimized expression with error handling
  */
 function generatePositionExpression(controlLayerName) {
-  var expressionCode = `
-// Position Expression for TextSelector v2.0
-try {
-    // Cache effect references for performance optimization
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-    var seed = ctrlLayer.effect("SeedRandom")("Slider");
-    var manualPos = ctrlLayer.effect("Ani - Position")("Point");
-    var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-    
-    // Early exit if system is disabled
-    if (!globalEnable) return [0, 0];
-    
-    // Check if 2-way mode is active
-    var is2Way = (aniStyle == 2 || aniStyle == 3);
-    
-    if (is2Way) {
-        // Set random seed for consistent randomization across renders
-        seedRandom(seed + textIndex, true);
-        
-        // Generate random position within composition bounds
-        var maxX = thisComp.width / 4;
-        var maxY = thisComp.height / 4;
-        
-        if (aniStyle == 2) {
-            // 2-way XY mode - X varies more than Y
-            var x = random(-maxX, maxX);
-            var y = random(-maxY/2, maxY/2);
-            [x, y];
-        } else {
-            // 2-way YX mode - Y varies more than X  
-            var x = random(-maxX/2, maxX/2);
-            var y = random(-maxY, maxY);
-            [x, y];
-        }
-    } else {
-        // Single mode - use manual position values from Ani-Position control
-        manualPos;
-    }
-    
-} catch (err) {
-    // Fallback to safe default position
-    [0, 0];
-}`;
-
+  var expressionCode =
+    "// Position Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    "    // Cache effect references for performance optimization\n" +
+    "    var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "    var aniStyle = ctrlLayer.effect(\"Ani - Style\")(\"Slider\");\n" +
+    "    var seed = ctrlLayer.effect(\"SeedRandom\")(\"Slider\");\n" +
+    "    var manualPos = ctrlLayer.effect(\"Ani - Position\")(\"Point\");\n" +
+    "    var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "    \n" +
+    "    // Early exit if system is disabled\n" +
+    "    if (!globalEnable) return [0, 0];\n" +
+    "    \n" +
+    "    // Check if 2-way mode is active\n" +
+    "    var is2Way = (aniStyle == 2 || aniStyle == 3);\n" +
+    "    \n" +
+    "    if (is2Way) {\n" +
+    "        // Set random seed for consistent randomization across renders\n" +
+    "        seedRandom(seed + textIndex, true);\n" +
+    "        \n" +
+    "        // Generate random position within composition bounds\n" +
+    "        var maxX = thisComp.width / 4;\n" +
+    "        var maxY = thisComp.height / 4;\n" +
+    "        \n" +
+    "        if (aniStyle == 2) {\n" +
+    "            // 2-way XY mode - X varies more than Y\n" +
+    "            var x = random(-maxX, maxX);\n" +
+    "            var y = random(-maxY/2, maxY/2);\n" +
+    "            [x, y];\n" +
+    "        } else {\n" +
+    "            // 2-way YX mode - Y varies more than X  \n" +
+    "            var x = random(-maxX/2, maxX/2);\n" +
+    "            var y = random(-maxY, maxY);\n" +
+    "            [x, y];\n" +
+    "        }\n" +
+    "    } else {\n" +
+    "        // Single mode - use manual position values from Ani-Position control\n" +
+    "        manualPos;\n" +
+    "    }\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    // Fallback to safe default position\n" +
+    "    [0, 0];\n" +
+    "}";
   return expressionCode;
 }
 
@@ -227,26 +226,25 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generateAnchorPointExpression(controlLayerName) {
-  var expressionCode = `
-// Anchor Point Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-    
-    // Early exit if system is disabled
-    if (!globalEnable) return [0, -40];
-    
-    // Get anchor point adjustment
-    var anchorAdjust = ctrlLayer.effect("Text AnkerPoint")("Point");
-    
-    // Apply adjustment to default anchor point [0,-40]
-    [0, -40] + anchorAdjust;
-    
-} catch (err) {
-    // Fallback to default anchor point
-    [0, -40];
-}`;
-
+  var expressionCode =
+    "// Anchor Point Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    "    var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "    var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "    \n" +
+    "    // Early exit if system is disabled\n" +
+    "    if (!globalEnable) return [0, -40];\n" +
+    "    \n" +
+    "    // Get anchor point adjustment\n" +
+    "    var anchorAdjust = ctrlLayer.effect(\"Text AnkerPoint\")(\"Point\");\n" +
+    "    \n" +
+    "    // Apply adjustment to default anchor point [0,-40]\n" +
+    "    [0, -40] + anchorAdjust;\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    // Fallback to default anchor point\n" +
+    "    [0, -40];\n" +
+    "}";
   return expressionCode;
 }
 

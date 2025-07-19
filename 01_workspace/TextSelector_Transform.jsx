@@ -144,56 +144,56 @@ function applyTransformExpressions(textLayer, controlLayerName) {
  * @returns {String} Scale expression
  */
 function generateScaleExpression(controlLayerName) {
-  var expressionCode = `
-// Scale expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  [100, 100];
-} else {
-  // Cache effect references
-  var scaleOn = ctrlLayer.effect("Scale : ON")("Checkbox");
-  var addScale = ctrlLayer.effect("Add Scale")("Point");
-  var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Get text index and selector value
-  var idx = textIndex;
-  var selectorValue = effect("Selector").value;
-  
-  // Initialize result
-  var result = [100, 100];
-  
-  // Apply scale if enabled
-  if (scaleOn) {
-    if (aniStyle >= 2) {
-      // 2-way random mode
-      // Use seedRandom for consistent randomization
-      seedRandom(seedRandom + idx);
-      
-      // Generate random scale values within range -2000 to 2000
-      var randomX = random(-2000, 2000);
-      var randomY = random(-2000, 2000);
-      
-      // Apply selector value for animation
-      result = [
-        100 + randomX * selectorValue,
-        100 + randomY * selectorValue
-      ];
-    } else {
-      // Single mode - use manual values
-      result = [
-        100 + addScale[0] * selectorValue,
-        100 + addScale[1] * selectorValue
-      ];
-    }
-  }
-  
-  result;
-}`;
+  var expressionCode =
+    "// Scale expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  [100, 100];\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var scaleOn = ctrlLayer.effect(\"Scale : ON\")(\"Checkbox\");\n" +
+    "  var addScale = ctrlLayer.effect(\"Add Scale\")(\"Point\");\n" +
+    "  var aniStyle = ctrlLayer.effect(\"Ani - Style\")(\"Slider\");\n" +
+    "  var seedRandom = ctrlLayer.effect(\"SeedRandom\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Get text index and selector value\n" +
+    "  var idx = textIndex;\n" +
+    "  var selectorValue = effect(\"Selector\").value;\n" +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = [100, 100];\n" +
+    "  \n" +
+    "  // Apply scale if enabled\n" +
+    "  if (scaleOn) {\n" +
+    "    if (aniStyle >= 2) {\n" +
+    "      // 2-way random mode\n" +
+    "      // Use seedRandom for consistent randomization\n" +
+    "      seedRandom(seedRandom + idx);\n" +
+    "      \n" +
+    "      // Generate random scale values within range -2000 to 2000\n" +
+    "      var randomX = random(-2000, 2000);\n" +
+    "      var randomY = random(-2000, 2000);\n" +
+    "      \n" +
+    "      // Apply selector value for animation\n" +
+    "      result = [\n" +
+    "        100 + randomX * selectorValue,\n" +
+    "        100 + randomY * selectorValue\n" +
+    "      ];\n" +
+    "    } else {\n" +
+    "      // Single mode - use manual values\n" +
+    "      result = [\n" +
+    "        100 + addScale[0] * selectorValue,\n" +
+    "        100 + addScale[1] * selectorValue\n" +
+    "      ];\n" +
+    "    }\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "[100, 100]");
 }
@@ -204,49 +204,49 @@ if (!globalEnable) {
  * @returns {String} Rotation expression
  */
 function generateRotationExpression(controlLayerName) {
-  var expressionCode = `
-// Rotation expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var rotationOn = ctrlLayer.effect("Rotation : ON")("Checkbox");
-  var addRotation = ctrlLayer.effect("Add Rotation")("Slider");
-  var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Get text index and selector value
-  var idx = textIndex;
-  var selectorValue = effect("Selector").value;
-  
-  // Initialize result
-  var result = 0;
-  
-  // Apply rotation if enabled
-  if (rotationOn) {
-    if (aniStyle >= 2) {
-      // 2-way random mode
-      // Use seedRandom for consistent randomization
-      seedRandom(seedRandom + idx);
-      
-      // Generate random rotation value within range -359 to 359
-      var randomRotation = random(-359, 359);
-      
-      // Apply selector value for animation
-      result = randomRotation * selectorValue;
-    } else {
-      // Single mode - use manual value
-      result = addRotation * selectorValue;
-    }
-  }
-  
-  result;
-}`;
+  var expressionCode =
+    "// Rotation expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var rotationOn = ctrlLayer.effect(\"Rotation : ON\")(\"Checkbox\");\n" +
+    "  var addRotation = ctrlLayer.effect(\"Add Rotation\")(\"Slider\");\n" +
+    "  var aniStyle = ctrlLayer.effect(\"Ani - Style\")(\"Slider\");\n" +
+    "  var seedRandom = ctrlLayer.effect(\"SeedRandom\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Get text index and selector value\n" +
+    "  var idx = textIndex;\n" +
+    "  var selectorValue = effect(\"Selector\").value;\n" +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = 0;\n" +
+    "  \n" +
+    "  // Apply rotation if enabled\n" +
+    "  if (rotationOn) {\n" +
+    "    if (aniStyle >= 2) {\n" +
+    "      // 2-way random mode\n" +
+    "      // Use seedRandom for consistent randomization\n" +
+    "      seedRandom(seedRandom + idx);\n" +
+    "      \n" +
+    "      // Generate random rotation value within range -359 to 359\n" +
+    "      var randomRotation = random(-359, 359);\n" +
+    "      \n" +
+    "      // Apply selector value for animation\n" +
+    "      result = randomRotation * selectorValue;\n" +
+    "    } else {\n" +
+    "      // Single mode - use manual value\n" +
+    "      result = addRotation * selectorValue;\n" +
+    "    }\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }
@@ -257,49 +257,49 @@ if (!globalEnable) {
  * @returns {String} Distortion expression
  */
 function generateDistortionExpression(controlLayerName) {
-  var expressionCode = `
-// Distortion expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var distortionOn = ctrlLayer.effect("Distortion : ON")("Checkbox");
-  var addDistortion = ctrlLayer.effect("Add Distortion")("Slider");
-  var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Get text index and selector value
-  var idx = textIndex;
-  var selectorValue = effect("Selector").value;
-  
-  // Initialize result
-  var result = 0;
-  
-  // Apply distortion if enabled
-  if (distortionOn) {
-    if (aniStyle >= 2) {
-      // 2-way random mode
-      // Use seedRandom for consistent randomization
-      seedRandom(seedRandom + idx);
-      
-      // Generate random distortion value within range -70 to 70
-      var randomDistortion = random(-70, 70);
-      
-      // Apply selector value for animation
-      result = randomDistortion * selectorValue;
-    } else {
-      // Single mode - use manual value
-      result = addDistortion * selectorValue;
-    }
-  }
-  
-  result;
-}`;
+  var expressionCode =
+    "// Distortion expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var distortionOn = ctrlLayer.effect(\"Distortion : ON\")(\"Checkbox\");\n" +
+    "  var addDistortion = ctrlLayer.effect(\"Add Distortion\")(\"Slider\");\n" +
+    "  var aniStyle = ctrlLayer.effect(\"Ani - Style\")(\"Slider\");\n" +
+    "  var seedRandom = ctrlLayer.effect(\"SeedRandom\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Get text index and selector value\n" +
+    "  var idx = textIndex;\n" +
+    "  var selectorValue = effect(\"Selector\").value;\n" +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = 0;\n" +
+    "  \n" +
+    "  // Apply distortion if enabled\n" +
+    "  if (distortionOn) {\n" +
+    "    if (aniStyle >= 2) {\n" +
+    "      // 2-way random mode\n" +
+    "      // Use seedRandom for consistent randomization\n" +
+    "      seedRandom(seedRandom + idx);\n" +
+    "      \n" +
+    "      // Generate random distortion value within range -70 to 70\n" +
+    "      var randomDistortion = random(-70, 70);\n" +
+    "      \n" +
+    "      // Apply selector value for animation\n" +
+    "      result = randomDistortion * selectorValue;\n" +
+    "    } else {\n" +
+    "      // Single mode - use manual value\n" +
+    "      result = addDistortion * selectorValue;\n" +
+    "    }\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }
@@ -310,49 +310,49 @@ if (!globalEnable) {
  * @returns {String} Distortion axis expression
  */
 function generateDistortionAxisExpression(controlLayerName) {
-  var expressionCode = `
-// Distortion Axis expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var distortionOn = ctrlLayer.effect("Distortion : ON")("Checkbox");
-  var addDisAxis = ctrlLayer.effect("Add Dis-Axis")("Slider");
-  var aniStyle = ctrlLayer.effect("Ani - Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Get text index and selector value
-  var idx = textIndex;
-  var selectorValue = effect("Selector").value;
-  
-  // Initialize result
-  var result = 0;
-  
-  // Apply distortion axis if enabled
-  if (distortionOn) {
-    if (aniStyle >= 2) {
-      // 2-way random mode
-      // Use seedRandom for consistent randomization
-      seedRandom(seedRandom + idx);
-      
-      // Generate random distortion axis value within range -70 to 70
-      var randomDisAxis = random(-70, 70);
-      
-      // Apply selector value for animation
-      result = randomDisAxis * selectorValue;
-    } else {
-      // Single mode - use manual value
-      result = addDisAxis * selectorValue;
-    }
-  }
-  
-  result;
-}`;
+  var expressionCode =
+    "// Distortion Axis expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    "var ctrlLayer = thisComp.layer(\"" + controlLayerName + "\");\n" +
+    "var globalEnable = ctrlLayer.effect(\"Global Enable\")(\"Checkbox\");\n" +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    "  var distortionOn = ctrlLayer.effect(\"Distortion : ON\")(\"Checkbox\");\n" +
+    "  var addDisAxis = ctrlLayer.effect(\"Add Dis-Axis\")(\"Slider\");\n" +
+    "  var aniStyle = ctrlLayer.effect(\"Ani - Style\")(\"Slider\");\n" +
+    "  var seedRandom = ctrlLayer.effect(\"SeedRandom\")(\"Slider\");\n" +
+    "  \n" +
+    "  // Get text index and selector value\n" +
+    "  var idx = textIndex;\n" +
+    "  var selectorValue = effect(\"Selector\").value;\n" +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = 0;\n" +
+    "  \n" +
+    "  // Apply distortion axis if enabled\n" +
+    "  if (distortionOn) {\n" +
+    "    if (aniStyle >= 2) {\n" +
+    "      // 2-way random mode\n" +
+    "      // Use seedRandom for consistent randomization\n" +
+    "      seedRandom(seedRandom + idx);\n" +
+    "      \n" +
+    "      // Generate random distortion axis value within range -70 to 70\n" +
+    "      var randomDisAxis = random(-70, 70);\n" +
+    "      \n" +
+    "      // Apply selector value for animation\n" +
+    "      result = randomDisAxis * selectorValue;\n" +
+    "    } else {\n" +
+    "      // Single mode - use manual value\n" +
+    "      result = addDisAxis * selectorValue;\n" +
+    "    }\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }

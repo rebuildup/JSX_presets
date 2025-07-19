@@ -137,34 +137,35 @@ function applyOpacityExpressions(textLayer, controlLayerName) {
  * @returns {String} Optimized expression with error handling
  */
 function generateOpacityExpression(controlLayerName) {
-  var expressionCode = `
-// Comprehensive Opacity Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    
-    var opacityStyle = ctrlLayer.effect("Opacity - Style")("Slider");
-    var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");
-    var delay = ctrlLayer.effect("Delay")("Slider");
-    
-    if (opacityStyle == 1) {
-        // Auto Mode: Fade in based on frame
-        var F = (time - inPoint) / thisComp.frameDuration;
-        var autoOpacity = (F <= 0) ? 100 : 0;
-        autoOpacity / 100; // Convert to 0-1 range for selector
-    } else {
-        // Manual Mode: Use manual opacity with delay
-        var d = delay * thisComp.frameDuration * (textIndex - 1);
-        var manualOpacityValue = ctrlLayer.effect("Opacity (Manual)")("Slider").valueAtTime(time - d);
-        
-        // Convert to selector value (0-100 to 0-1)
-        manualOpacityValue / 100;
-    }
-    
-} catch (err) {
-    // Fallback to full opacity
-    1;
-}`;
-
+  var expressionCode =
+    "// Comprehensive Opacity Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    '    var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    "    \n" +
+    '    var opacityStyle = ctrlLayer.effect("Opacity - Style")("Slider");\n' +
+    '    var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");\n' +
+    '    var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    "    \n" +
+    "    if (opacityStyle == 1) {\n" +
+    "        // Auto Mode: Fade in based on frame\n" +
+    "        var F = (time - inPoint) / thisComp.frameDuration;\n" +
+    "        var autoOpacity = (F <= 0) ? 100 : 0;\n" +
+    "        autoOpacity / 100; // Convert to 0-1 range for selector\n" +
+    "    } else {\n" +
+    "        // Manual Mode: Use manual opacity with delay\n" +
+    "        var d = delay * thisComp.frameDuration * (textIndex - 1);\n" +
+    '        var manualOpacityValue = ctrlLayer.effect("Opacity (Manual)")("Slider").valueAtTime(time - d);\n' +
+    "        \n" +
+    "        // Convert to selector value (0-100 to 0-1)\n" +
+    "        manualOpacityValue / 100;\n" +
+    "    }\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    // Fallback to full opacity\n" +
+    "    1;\n" +
+    "}";
   return expressionCode;
 }
 
@@ -174,28 +175,30 @@ try {
  * @returns {String} Optimized expression with error handling
  */
 function generateOpacityDisplayExpression(controlLayerName) {
-  var expressionCode = `
-// Opacity Display Logic Expression for TextSelector v2.0
-try {
-    var ctrlLayer = thisComp.layer("${controlLayerName}");
-    
-    var opacityStyle = ctrlLayer.effect("Opacity - Style")("Slider");
-    var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");
-    
-    if (opacityStyle == 1) {
-        // Auto Mode: Show calculated opacity
-        var F = (time - inPoint) / thisComp.frameDuration;
-        var autoOpacity = (F <= 0) ? 100 : 0;
-        autoOpacity;
-    } else {
-        // Manual Mode: Show manual opacity
-        opacityManual;
-    }
-    
-} catch (err) {
-    // Fallback to 100%
-    100;
-}`;
+  var expressionCode =
+    "// Opacity Display Logic Expression for TextSelector v2.0\n" +
+    "try {\n" +
+    '    var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    "    \n" +
+    '    var opacityStyle = ctrlLayer.effect("Opacity - Style")("Slider");\n' +
+    '    var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");\n' +
+    "    \n" +
+    "    if (opacityStyle == 1) {\n" +
+    "        // Auto Mode: Show calculated opacity\n" +
+    "        var F = (time - inPoint) / thisComp.frameDuration;\n" +
+    "        var autoOpacity = (F <= 0) ? 100 : 0;\n" +
+    "        autoOpacity;\n" +
+    "    } else {\n" +
+    "        // Manual Mode: Show manual opacity\n" +
+    "        opacityManual;\n" +
+    "    }\n" +
+    "    \n" +
+    "} catch (err) {\n" +
+    "    // Fallback to 100%\n" +
+    "    100;\n" +
+    "}";
 
   return expressionCode;
 }

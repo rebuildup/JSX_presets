@@ -423,47 +423,48 @@ function addRangeSelector(animator, controlLayerName, axis) {
  * @returns {String} Position expression
  */
 function generatePositionExpression(controlLayerName) {
-  var expressionCode = `
-// Position expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  [0, 0, 0];
-} else {
-  // Cache effect references
-  var aniPosition = ctrlLayer.effect("Ani-Position")("Point");
-  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");
-  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");
-  
-  // Initialize result
-  var result = [0, 0, 0];
-  
-  // Apply position based on animation style
-  if (aniStyle >= 2) {
-    // 2-way random mode
-    seedRandom(seedRandom + textIndex);
-    
-    if (aniStyle == 2) {
-      // 2-way XY mode
-      result[0] = random(-thisComp.width/2, thisComp.width/2);
-      result[1] = random(-thisComp.height/2, thisComp.height/2);
-    } else {
-      // 2-way YX mode
-      result[0] = random(-thisComp.width/2, thisComp.width/2);
-      result[1] = random(-thisComp.height/2, thisComp.height/2);
-    }
-  } else {
-    // Single mode - use manual values
-    result[0] = aniPosition[0];
-    result[1] = aniPosition[1];
-  }
-  
-  result;
-}`;
-
+  var expressionCode =
+    "// Position expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  [0, 0, 0];\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var aniPosition = ctrlLayer.effect("Ani-Position")("Point");\n' +
+    '  var aniStyle = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var seedRandom = ctrlLayer.effect("SeedRandom")("Slider");\n' +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = [0, 0, 0];\n" +
+    "  \n" +
+    "  // Apply position based on animation style\n" +
+    "  if (aniStyle >= 2) {\n" +
+    "    // 2-way random mode\n" +
+    "    seedRandom(seedRandom + textIndex);\n" +
+    "    \n" +
+    "    if (aniStyle == 2) {\n" +
+    "      // 2-way XY mode\n" +
+    "      result[0] = random(-thisComp.width/2, thisComp.width/2);\n" +
+    "      result[1] = random(-thisComp.height/2, thisComp.height/2);\n" +
+    "    } else {\n" +
+    "      // 2-way YX mode\n" +
+    "      result[0] = random(-thisComp.width/2, thisComp.width/2);\n" +
+    "      result[1] = random(-thisComp.height/2, thisComp.height/2);\n" +
+    "    }\n" +
+    "  } else {\n" +
+    "    // Single mode - use manual values\n" +
+    "    result[0] = aniPosition[0];\n" +
+    "    result[1] = aniPosition[1];\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
   return generateSafeExpression(expressionCode, "[0, 0, 0]");
 }
 
@@ -473,23 +474,24 @@ if (!globalEnable) {
  * @returns {String} Anchor point expression
  */
 function generateAnchorPointExpression(controlLayerName) {
-  var expressionCode = `
-// Anchor Point expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  [0, -40, 0];
-} else {
-  // Get Text AnkerPoint value
-  var ankerPoint = ctrlLayer.effect("Text AnkerPoint")("Point");
-  
-  // Default anchor point + user adjustment
-  [0 + ankerPoint[0], -40 + ankerPoint[1], 0];
-}`;
-
+  var expressionCode =
+    "// Anchor Point expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  [0, -40, 0];\n" +
+    "} else {\n" +
+    "  // Get Text AnkerPoint value\n" +
+    '  var ankerPoint = ctrlLayer.effect("Text AnkerPoint")("Point");\n' +
+    "  \n" +
+    "  // Default anchor point + user adjustment\n" +
+    "  [0 + ankerPoint[0], -40 + ankerPoint[1], 0];\n" +
+    "}";
   return generateSafeExpression(expressionCode, "[0, -40, 0]");
 }
 
@@ -499,37 +501,39 @@ if (!globalEnable) {
  * @returns {String} Opacity expression
  */
 function generateOpacityExpression(controlLayerName) {
-  var expressionCode = `
-// Opacity expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  100;
-} else {
-  // Cache effect references
-  var opacityStyle = ctrlLayer.effect("Opacity-Style")("Slider");
-  var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");
-  var delay = ctrlLayer.effect("Delay")("Slider");
-  
-  // Initialize result
-  var result = 100;
-  
-  // Apply opacity based on style
-  if (opacityStyle == 1) {
-    // Auto mode
-    var framesSinceInPoint = (time - inPoint) / thisComp.frameDuration;
-    result = framesSinceInPoint <= 0 ? 100 : 0;
-  } else {
-    // Manual mode
-    var d = delay * thisComp.frameDuration * (textIndex - 1);
-    result = opacityManual.valueAtTime(time - d);
-  }
-  
-  result;
-}`;
+  var expressionCode =
+    "// Opacity expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  100;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var opacityStyle = ctrlLayer.effect("Opacity-Style")("Slider");\n' +
+    '  var opacityManual = ctrlLayer.effect("Opacity (Manual)")("Slider");\n' +
+    '  var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    "  \n" +
+    "  // Initialize result\n" +
+    "  var result = 100;\n" +
+    "  \n" +
+    "  // Apply opacity based on style\n" +
+    "  if (opacityStyle == 1) {\n" +
+    "    // Auto mode\n" +
+    "    var framesSinceInPoint = (time - inPoint) / thisComp.frameDuration;\n" +
+    "    result = framesSinceInPoint <= 0 ? 100 : 0;\n" +
+    "  } else {\n" +
+    "    // Manual mode\n" +
+    "    var d = delay * thisComp.frameDuration * (textIndex - 1);\n" +
+    "    result = opacityManual.valueAtTime(time - d);\n" +
+    "  }\n" +
+    "  \n" +
+    "  result;\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "100");
 }
@@ -540,30 +544,32 @@ if (!globalEnable) {
  * @returns {String} Position Y selector expression
  */
 function generatePositionYSelectorExpression(controlLayerName) {
-  var expressionCode = `
-// Position Y Selector expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var delay = ctrlLayer.effect("Delay")("Slider");
-  var styledp = ctrlLayer.effect("Ani-Style")("Slider");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Calculate delay based on animation style
-  var d = (styledp == 2 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);
-  
-  // Get animation value at delayed time
-  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);
-}`;
+  var expressionCode =
+    "// Position Y Selector expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    '  var styledp = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Calculate delay based on animation style\n" +
+    "  var d = (styledp == 2 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);\n" +
+    "  \n" +
+    "  // Get animation value at delayed time\n" +
+    '  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);\n' +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }
@@ -574,30 +580,32 @@ if (!globalEnable) {
  * @returns {String} Position X selector expression
  */
 function generatePositionXSelectorExpression(controlLayerName) {
-  var expressionCode = `
-// Position X Selector expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Cache effect references
-  var delay = ctrlLayer.effect("Delay")("Slider");
-  var styledp = ctrlLayer.effect("Ani-Style")("Slider");
-  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");
-  
-  // Apply posterize time for performance
-  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);
-  
-  // Calculate delay based on animation style
-  var d = (styledp == 3 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);
-  
-  // Get animation value at delayed time
-  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);
-}`;
+  var expressionCode =
+    "// Position X Selector expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Cache effect references\n" +
+    '  var delay = ctrlLayer.effect("Delay")("Slider");\n' +
+    '  var styledp = ctrlLayer.effect("Ani-Style")("Slider");\n' +
+    '  var posti = ctrlLayer.effect("Posterize(0=FPS)")("Slider");\n' +
+    "  \n" +
+    "  // Apply posterize time for performance\n" +
+    "  posterizeTime(posti == 0 ? 1/thisComp.frameDuration : posti);\n" +
+    "  \n" +
+    "  // Calculate delay based on animation style\n" +
+    "  var d = (styledp == 3 ? delay * 2 : delay) * thisComp.frameDuration * (textIndex - 1);\n" +
+    "  \n" +
+    "  // Get animation value at delayed time\n" +
+    '  ctrlLayer.effect("Animation")("Slider").valueAtTime(time - d);\n' +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }
@@ -608,22 +616,24 @@ if (!globalEnable) {
  * @returns {String} Opacity selector expression
  */
 function generateOpacitySelectorExpression(controlLayerName) {
-  var expressionCode = `
-// Opacity Selector expression for TextSelector
-// Cache control layer reference
-var ctrlLayer = thisComp.layer("${controlLayerName}");
-var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");
-
-// Early exit if disabled
-if (!globalEnable) {
-  0;
-} else {
-  // Get text index
-  var idx = textIndex;
-  
-  // Simple selector based on text index
-  idx / textTotal;
-}`;
+  var expressionCode =
+    "// Opacity Selector expression for TextSelector\n" +
+    "// Cache control layer reference\n" +
+    'var ctrlLayer = thisComp.layer("' +
+    controlLayerName +
+    '");\n' +
+    'var globalEnable = ctrlLayer.effect("Global Enable")("Checkbox");\n' +
+    "\n" +
+    "// Early exit if disabled\n" +
+    "if (!globalEnable) {\n" +
+    "  0;\n" +
+    "} else {\n" +
+    "  // Get text index\n" +
+    "  var idx = textIndex;\n" +
+    "  \n" +
+    "  // Simple selector based on text index\n" +
+    "  idx / textTotal;\n" +
+    "}";
 
   return generateSafeExpression(expressionCode, "0");
 }
